@@ -1,0 +1,230 @@
+% =====================================================================
+%  Section 8.1--8.3: Cole--Hopf, exact solution, vanishing viscosity.
+%  Section 8.4 (Godunov scheme) is in ext_godunov.tex.
+% =====================================================================
+
+\section{Extensions}
+\label{sec:extensions}
+
+Section~\ref{sec:nonuniqueness} showed that conservation alone leaves infinitely many
+weak solutions, and the Oleinik condition restores uniqueness, but it does not
+explain \emph{why} nature, or a physical model with a small viscosity, picks that
+solution. Can the selected solution be derived from the underlying viscous
+equation? This section tests the entropy condition against the two standard selection
+mechanisms: vanishing viscosity (Subsections~\ref{subsec:cole-hopf}--%
+\ref{subsec:vanishing-viscosity}) and monotone numerical approximation
+(Subsection~\ref{subsec:godunov}).
+
+\subsection{The Cole--Hopf transformation}
+\label{subsec:cole-hopf}
+
+\begin{theorem}[Cole--Hopf transformation \cite{cole1951,hopf1950}]
+\label{thm:cole-hopf}
+Let $u\in C^{2,1}(\mathbb{R}\times(0,T))$ solve $u_t+u\,u_x=\nu\,u_{xx}$, with $u$ and
+$u_x$ continuous on $\mathbb{R}\times[0,T)$ (so that $c$ below is defined), and set
+\begin{equation}
+  \label{eq:cole-hopf-def}
+  \hat\psi(x,t)=-\frac{1}{2\nu}\int_0^x u(y,t)\,dy,
+  \qquad
+  c(t)=\int_0^t\Big(\frac{u(0,\tau)^2}{4\nu}-\frac{u_x(0,\tau)}{2}\Big)d\tau,
+  \qquad
+  \theta(x,t)=\exp\big(\hat\psi(x,t)+c(t)\big)>0 .
+\end{equation}
+Then $\theta$ solves the heat equation $\theta_t=\nu\,\theta_{xx}$, and
+$u=-2\nu\,\theta_x/\theta$.
+\end{theorem}
+
+\begin{proof}
+Since $c$ depends on $t$ only, $\theta_x/\theta=\hat\psi_x=-u/(2\nu)$, which
+gives $u=-2\nu\theta_x/\theta$. For the heat equation, let
+$w=\hat\psi_t-\nu\hat\psi_{xx}-\nu\hat\psi_x^2$. Using
+$\hat\psi_x=-u/(2\nu)$, $\hat\psi_{xx}=-u_x/(2\nu)$,
+$\hat\psi_{xt}=-u_t/(2\nu)$ and $\hat\psi_{xxx}=-u_{xx}/(2\nu)$,
+\begin{equation}
+  w_x=\hat\psi_{xt}-\nu\hat\psi_{xxx}-2\nu\hat\psi_x\hat\psi_{xx}
+  =-\frac{1}{2\nu}\big(u_t+u\,u_x-\nu\,u_{xx}\big)=0 .
+\end{equation}
+Hence $w$ depends on $t$ only and may be evaluated at $x=0$, where
+$\hat\psi(0,t)=0$ gives $\hat\psi_t(0,t)=0$:
+\begin{equation}
+  w(t)=w(0,t)=\frac{u_x(0,t)}{2}-\frac{u(0,t)^2}{4\nu}=:C(t).
+\end{equation}
+With $\psi=\hat\psi+c$ we have $c'=-C$, so $\psi_t-\nu\psi_{xx}-\nu\psi_x^2=
+C+c'=0$. Since $\theta=e^{\psi}$ satisfies $\theta_t=\theta\psi_t$ and
+$\theta_{xx}=\theta(\psi_{xx}+\psi_x^2)$, this is $\theta_t=\nu\theta_{xx}$. (The
+factor $e^{c(t)}$ depends on $t$ only, so it affects neither $u=-2\nu\theta_x/\theta$
+nor the initial data, as $c(0)=0$; it cannot be omitted, since $e^{\hat\psi}$
+satisfies $\partial_t\theta=\nu\theta_{xx}+C(t)\theta$.)
+\end{proof}
+
+
+
+\subsection{Exact solution via the heat kernel}
+\label{subsec:cole-hopf-solution}
+
+By Theorem~\ref{thm:cole-hopf}, a classical solution of \eqref{eq:viscous-burgers}
+that is bounded on $\mathbb{R}\times[0,T']$ for each $T'<T$ (this is what makes
+$\theta$ obey the growth bound below) corresponds to a solution of the heat
+equation with initial data
+\begin{equation}
+  \label{eq:theta0}
+  \theta_0(x) = \exp\left(-\frac{1}{2\nu}\int_0^x u_0(y)\, dy\right)
+  \le e^{\|u_0\|_\infty|x|/(2\nu)} .
+\end{equation}
+The Cauchy problem for the heat equation has a unique solution in the class of
+at most $e^{a|x|^2}$ growth \cite[\S2.3.3]{evans2010}, which contains this
+data; it is given by
+\begin{equation}
+  \label{eq:theta-heat-kernel}
+  \theta(x,t) = \int_{\mathbb{R}} \frac{1}{\sqrt{4\pi\nu t}}\,
+    \exp\left(-\frac{(x-y)^2}{4\nu t}\right) \theta_0(y)\, dy.
+\end{equation}
+Substituting \eqref{eq:theta0}--\eqref{eq:theta-heat-kernel} into
+$u=-2\nu\,\theta_x/\theta$ and differentiating under the integral gives the
+\emph{Cole--Hopf formula}
+\begin{equation}
+  \label{eq:cole-hopf-formula}
+  u(x,t) = \frac{\displaystyle\int_{\mathbb{R}} \frac{x-y}{t}\, \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy}
+                {\displaystyle\int_{\mathbb{R}} \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy},
+  \qquad
+  G(x,y,t) = \int_0^y u_0(r)\, dr + \frac{(x-y)^2}{2t}.
+\end{equation}
+
+\begin{corollary}[Global smoothness; Hopf \cite{hopf1950}]
+\label{cor:global-smoothness}
+For every bounded measurable $u_0$ and every $\nu>0$, formula
+\eqref{eq:cole-hopf-formula} defines a $C^\infty$ solution $u^{(\nu)}$ of
+\eqref{eq:viscous-burgers} on $\mathbb{R}\times(0,\infty)$. Moreover
+$\|u^{(\nu)}\|_\infty\le\|u_0\|_\infty$, $u^{(\nu)}(\cdot,t)\to u_0$ in
+$L^1_{\mathrm{loc}}$ and at every continuity point of $u_0$ as $t\to0^+$, and
+$u^{(\nu)}$ is the unique bounded solution with these properties.
+\end{corollary}
+
+\noindent For $t>0$, $\theta$ in \eqref{eq:theta-heat-kernel} is smooth and
+positive, and for any such solution $\theta$ of the heat equation
+$u=-2\nu\theta_x/\theta$ solves \eqref{eq:viscous-burgers}: with
+$\psi=\ln\theta$, $\psi_t-\nu\psi_{xx}-\nu\psi_x^2=0$, and differentiating in
+$x$ gives $(-u/2\nu)_t-\nu(-u/2\nu)_{xx}-\nu\big((u/2\nu)^2\big)_x=0$, i.e.\
+$u_t+u\,u_x=\nu u_{xx}$. This proves the first assertion for merely measurable
+$u_0$ (Theorem~\ref{thm:cole-hopf} is not needed in this direction), while the
+bound, the sense in which the data are attained, and uniqueness are taken from
+Hopf \cite{hopf1950}.
+
+\subsection{The vanishing viscosity limit}
+\label{subsec:vanishing-viscosity}
+
+\begin{theorem}[Vanishing viscosity limit \cite{hopf1950}]
+\label{thm:vanishing-viscosity}
+Let $u_0\in L^\infty(\mathbb{R})$, let $u^{(\nu)}$ be the solution of
+\eqref{eq:viscous-burgers} with data $u_0$ given by
+\eqref{eq:cole-hopf-formula}, and let $u$ be the entropy solution of
+\eqref{eq:inviscid-burgers} with the same data
+(Definition~\ref{def:entropy-solution}; for Riemann data,
+Theorem~\ref{thm:riemann-solution}). Then $u^{(\nu)} \to u$ pointwise almost
+everywhere and in $L^1_{\mathrm{loc}}$ as $\nu \to 0^+$.
+\end{theorem}
+
+Hopf's proof \cite{hopf1950} applies Laplace's method to
+\eqref{eq:cole-hopf-formula} and shows that $u^{(\nu)}$ converges to the
+Lax--Oleinik solution \eqref{eq:lax-oleinik}. Because his work predates Oleinik's
+condition, the identification of this limit with $u$ combines the theorem with
+Remark~\ref{rem:lax-oleinik} below, which shows that the Lax--Oleinik solution
+satisfies \eqref{eq:oleinik}, and with Theorem~\ref{thm:oleinik-uniqueness}. In
+short: the viscous solutions converge to the Lax--Oleinik solution (Hopf); that
+solution is a weak solution obeying \eqref{eq:oleinik} (Remark~\ref{rem:lax-oleinik});
+and weak solutions obeying \eqref{eq:oleinik} are unique, so the limit is $u$.
+
+\begin{remark}[The Lax--Oleinik formula]
+\label{rem:lax-oleinik}
+As $\nu\to0$ the weight $\exp(-G/2\nu)$ in \eqref{eq:cole-hopf-formula}
+concentrates at the minimisers of $y\mapsto G(x,y,t)$. Where the minimiser
+$y^*(x,t)$ is unique, the limit is
+\begin{equation}
+  \label{eq:lax-oleinik}
+  u(x,t)=\frac{x-y^*(x,t)}{t},\qquad
+  y^*(x,t)=\operatorname*{arg\,min}_y\Big\{V(y)+\frac{(x-y)^2}{2t}\Big\},
+  \quad V(y)=\int_0^y u_0 ,
+\end{equation}
+the \emph{Lax--Oleinik formula} \cite{lax1957,oleinik1957},
+\cite[\S3.4.2]{evans2010}; a jump occurs where two minimisers tie. Since
+$x\mapsto y^*(x,t)$ is nondecreasing \cite[\S3.4.2]{evans2010}, for $z>0$
+\begin{equation*}
+  u(x+z,t)-u(x,t)=\frac{z-\big(y^*(x+z,t)-y^*(x,t)\big)}{t}\ \le\ \frac zt,
+\end{equation*}
+which is \eqref{eq:oleinik}. As \eqref{eq:lax-oleinik} also defines a weak
+solution \cite[\S3.4.2]{evans2010}, the Lax--Oleinik solution is an entropy
+solution in the sense of Definition~\ref{def:entropy-solution}. The same bound
+shows $u(x+,t)-u(x-,t)\le0$ wherever one-sided limits exist: every jump is
+downward. The minimiser is unique for almost every $(x,t)$
+\cite[\S3.4.2]{evans2010}, so \eqref{eq:lax-oleinik} defines $u$ a.e.
+\end{remark}
+
+\begin{remark}[Riemann data and the Lax--Oleinik formula]
+\label{rem:riemann-lax-oleinik}
+For the data \eqref{eq:general-riemann-data}, $V(y)=u_\ell y$ for $y<0$ and
+$V(y)=u_r y$ for $y>0$, so $G(y)=V(y)+(x-y)^2/2t$ has a kink at $y=0$ and
+critical points $y_\ell=x-u_\ell t$ (admissible iff $x\le u_\ell t$) and
+$y_r=x-u_rt$ (iff $x\ge u_rt$). If $u_\ell<u_r$ and $u_\ell t<x<u_rt$, only the
+kink is a minimiser, giving the fan $u=x/t$. If $u_\ell>u_r$ and
+$u_rt<x<u_\ell t$, both $y_\ell,y_r$ are admissible, the kink is a local maximum,
+and $G(y_\ell)-G(y_r)=(u_\ell-u_r)\big(x-\tfrac{u_\ell+u_r}2t\big)$, so the
+minimum switches at $x=\tfrac{u_\ell+u_r}2t$: the Rankine--Hugoniot speed is the
+position at which two minimisers tie.\end{remark}
+
+\subsubsection{Viscous shock profiles}
+\label{subsubsec:viscous-profiles}
+
+\begin{proposition}[Viscous shock profiles]
+\label{prop:viscous-profile}
+Let $u_\ell\neq u_r$ and $\nu>0$. Equation \eqref{eq:viscous-burgers} has a
+travelling-wave solution $u(x,t)=\phi(x-st)$, with $\phi\in C^2$ bounded,
+$\phi(\eta)\to u_\ell$ as $\eta\to-\infty$, $\phi(\eta)\to u_r$ as $\eta\to+\infty$
+and $\phi'\to0$ as $\eta\to\pm\infty$, if and only if $u_\ell>u_r$. In that case
+$s=(u_\ell+u_r)/2$ and, with $\Delta=u_\ell-u_r$, $\phi$ is unique up to
+translation $\eta\mapsto\eta+\eta_0$; the translate with $\phi(0)=s$ is
+\begin{equation}
+  \label{eq:viscous-profile}
+  \phi(\eta)=s-\frac{\Delta}{2}\tanh\!\Big(\frac{\Delta\,\eta}{4\nu}\Big).
+\end{equation}
+Moreover $\|\phi-(s-\tfrac\Delta2\operatorname{sgn}\eta)\|_{L^1(\mathbb{R})}
+=4\ln2\;\nu$, independent of $s$ and $\Delta$.
+\end{proposition}
+
+\begin{proof}
+Substituting $u=\phi(x-st)$ gives $-s\phi'+\phi\phi'=\nu\phi''$, and
+integrating once from $-\infty$ (where $\phi'\to0$),
+\begin{equation*}
+  \nu\phi'=\tfrac12\phi^2-s\phi-K,\qquad K=\tfrac12u_\ell^2-su_\ell .
+\end{equation*}
+Letting $\eta\to+\infty$ shows that the right-hand side must also vanish at
+$u_r$, so $u_\ell,u_r$ are the two roots of the quadratic: $s=(u_\ell+u_r)/2$
+(the Rankine--Hugoniot speed) and
+\begin{equation}
+  \label{eq:profile-ode}
+  \nu\phi'=\tfrac12(\phi-u_\ell)(\phi-u_r).
+\end{equation}
+By uniqueness for this autonomous ODE, a nonconstant solution cannot cross
+either equilibrium $u_\ell,u_r$, so a connecting $\phi$ lies strictly between them. On
+$(\min(u_\ell,u_r),\max(u_\ell,u_r))$ the right side of \eqref{eq:profile-ode}
+is negative, so $\phi$ is decreasing. If $u_\ell<u_r$ it would have to
+increase from $u_\ell$ to $u_r$, a contradiction; if $u_\ell>u_r$,
+\eqref{eq:profile-ode} is solved by \eqref{eq:viscous-profile}; any other solution is a translate, by
+uniqueness for the ODE. For the $L^1$
+distance, by oddness and $\int_0^\infty(1-\tanh\zeta)\,d\zeta=\ln2$,
+\begin{equation*}
+  \int_{\mathbb{R}}\tfrac\Delta2\Big|\tanh\tfrac{\Delta\eta}{4\nu}-\operatorname{sgn}\eta\Big|\,d\eta
+  =\Delta\int_0^\infty\Big(1-\tanh\tfrac{\Delta\eta}{4\nu}\Big)d\eta
+  =\Delta\cdot\frac{4\nu}{\Delta}\ln2=4\ln2\,\nu .
+\end{equation*}
+\end{proof}
+
+Proposition~\ref{prop:viscous-profile} determines which isolated jumps admit a
+viscous connecting profile, namely exactly those with $u_\ell>u_r$, of thickness
+$O(\nu/\Delta)$; this motivates the Lax condition \eqref{eq:lax-burgers} but does
+not by itself select a solution of the initial-value problem. That selection is the
+role of Theorem~\ref{thm:vanishing-viscosity}, which together with
+Proposition~\ref{prop:entropy-selects-B} excludes $u_A$ of
+Section~\ref{sec:nonuniqueness}. As a check, for the shock data $(1,0)$ the
+closed-form Cole--Hopf solution (\texttt{cole\_hopf\_riemann.py} \cite{code}) lies at
+$L^1(-2,2)$ distance $2.773\,\nu$ from the entropy solution at $t=1$ for
+$\nu\le10^{-3}$, matching the layer value $4\ln2\,\nu$ above.

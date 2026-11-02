@@ -1,0 +1,37 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+The weak formulation fixes the speed of a shock through the Rankine--Hugoniot
+condition, but it does not fix which discontinuities are admissible: already for
+Riemann data there are infinitely many weak solutions
+(Section~\ref{sec:nonuniqueness}). The Oleinik condition, whose local form at a
+jump is the Lax condition $u_\ell>u_r$, selects exactly one of them
+(Sections~\ref{sec:entropy-condition}--\ref{sec:riemann-problem}). This is the
+solution selected by the viscous Burgers regularisation: the Cole--Hopf solutions
+converge to it (Theorem~\ref{thm:vanishing-viscosity},
+Remark~\ref{rem:lax-oleinik}), and a viscous travelling wave connecting $u_\ell$
+to $u_r$ exists if and only if $u_\ell>u_r$
+(Proposition~\ref{prop:viscous-profile}).
+
+Godunov's scheme selects the same solution. Its shock error is $0.50\,\Delta x$
+on aligned grids, and the modified equation \eqref{eq:modified-equation} gives an
+effective viscosity of roughly $0.18\,\Delta x$ that vanishes with the mesh (a
+heuristic consistency check, since the expansion is formal in the shock layer), while a
+consistent conservative but non-monotone flux converges to the non-entropy weak
+solution (Section~\ref{subsubsec:non-entropy}). The numerics are consistent with
+Theorem~\ref{thm:godunov-convergence} \cite{crandall1980}, which supplies the
+convergence statement. Taken together, the results show that conservation
+determines the speed of a shock, while entropy, whether imposed through the
+Oleinik condition, through vanishing viscosity, or through a monotone numerical
+scheme, determines which shocks occur.
+
+Several questions remain outside the scope of this paper. We restricted to
+bounded data and to the strictly convex flux $u^2/2$, where the Oleinik bound and
+the Lax condition are available; for general fluxes, systems and several space
+dimensions one must work with Kru\v{z}kov's entropy inequalities or Oleinik's
+condition~E, and uniqueness and convergence are then much harder. The rarefaction
+experiments did not settle the asymptotic rate of Godunov's scheme, and the
+agreement of the effective viscosity with the modified-equation prediction is
+empirical only. The picture established here for Burgers' equation, that
+discontinuities are admissible exactly when they are limits of viscous layers, is
+the model for the entropy conditions of more general conservation laws.
