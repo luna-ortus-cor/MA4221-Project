@@ -1,0 +1,30 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+The weak formulation extends solutions of \eqref{eq:inviscid-burgers} beyond
+breakdown but does not determine them: already for Riemann data there are
+infinitely many weak solutions (Section~\ref{sec:nonuniqueness}). The Oleinik
+condition, whose local form at a jump is the Lax condition $u_\ell>u_r$,
+restores uniqueness (Sections~\ref{sec:entropy-condition}--%
+\ref{sec:riemann-problem}). It is the physically correct selection because it
+is the one made by vanishing viscosity: the Cole--Hopf solutions converge to
+the entropy solution (Theorem~\ref{thm:vanishing-viscosity},
+Remark~\ref{rem:lax-oleinik}), and a viscous travelling wave connecting
+$u_\ell$ to $u_r$ exists if and only if $u_\ell>u_r$
+(Proposition~\ref{prop:viscous-profile}), in line with the standard theory
+\cite[\S3.4]{evans2010}.
+
+The Godunov scheme of Section~\ref{subsec:godunov} was tested on Riemann
+data. The shock error is $0.50\,\Delta x$ on grids aligned with the shock and
+$0.55$--$0.66\,\Delta x$ on the misaligned grids tested ($N=97,\dots,103$); the rarefaction error has observed order
+$\approx0.8$, still increasing. The modified equation
+\eqref{eq:modified-equation} predicts the shock error to within about $3\%$ at CFL
+$0.45$ and within about $10\%$ for CFL numbers in $[0.1,0.95]$, corresponding
+to an effective viscosity $\nu_{\rm eff}\approx0.18\,\Delta x$. This is a
+heuristic consistency check; the rigorous result is
+Theorem~\ref{thm:godunov-convergence} \cite{crandall1980}.
+
+Theorems~\ref{thm:oleinik-uniqueness}, \ref{thm:vanishing-viscosity} and
+\ref{thm:godunov-convergence} are taken from the literature, and the long-time
+N-wave asymptotics for compactly supported data \cite{lax1957},
+\cite[\S3.4.5]{evans2010} lie outside the scope of this paper.

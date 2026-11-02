@@ -1,0 +1,168 @@
+% =====================================================================
+%  Section 8.4: The worked example u_0 = -arctan(x) completed.
+%  Uses the Lax--Oleinik formula (Remark 8.x) and the Cole--Hopf formula
+%  (Section 8.2).  Optional, but Section 3.4 refers to it.
+%  Code: code/arctan_example.py
+% =====================================================================
+
+\subsection{The worked example completed: $u_0=-\arctan x$}
+\label{subsec:arctan-complete}
+
+Sections~\ref{subsec:char-example} and \ref{subsec:shock-example} followed
+$u_0(x)=-\arctan x$ up to its breakdown at $(x^*,t^*)=(0,1)$. The
+Lax--Oleinik formula \eqref{eq:lax-oleinik} lets us continue the entropy
+solution explicitly. The results of this subsection are worked
+computations (with the proofs given in outline), not new theorems; the
+numerical parts are produced by \texttt{code/arctan\_example.py}.
+
+\subsubsection{Exact entropy solution after breakdown}
+
+Here $V(y)=\int_0^y u_0=-\big(y\arctan y-\tfrac12\ln(1+y^2)\big)$, so the
+critical points of $y\mapsto G(y)=V(y)+(x-y)^2/(2t)$ satisfy
+\begin{equation}
+  \label{eq:arctan-critical}
+  G'(y)=-\arctan y+\frac{y-x}{t}=0
+  \iff x=y-t\arctan y=\Phi_t(y),
+\end{equation}
+i.e.\ they are exactly the foot points $x_0=y$ of the characteristics
+through $(x,t)$. For $t>1$ there are three of them when $|x|$ is small.
+
+\begin{proposition}[Entropy solution for $u_0=-\arctan x$]
+\label{prop:arctan-solution}
+For $t<1$ the entropy solution is the classical solution
+\eqref{eq:implicit-solution} (at $t=1$ it is continuous, with a vertical
+tangent at $x=0$). For $t>1$ let $y^*(t)>0$ be the unique
+positive root of $\arctan y=y/t$. Then the entropy solution is odd in $x$,
+smooth for $x\ne0$, and for $x>0$
+\begin{equation}
+  \label{eq:arctan-outer}
+  u(x,t)=-\arctan y,\qquad\text{where } y\ge y^*(t)\text{ is the unique solution of }
+  y-t\arctan y=x,
+\end{equation}
+with a single \emph{stationary} shock at $x=0$ of strength
+\begin{equation}
+  \label{eq:arctan-strength}
+  u_\ell(t)=-u_r(t)=\arctan y^*(t)\in(0,\pi/2).
+\end{equation}
+Moreover $u_\ell(t)=\sqrt{3(t-1)}\,(1+o(1))$ as $t\downarrow1$, and
+$u_\ell(t)\to\pi/2$ as $t\to\infty$.
+\end{proposition}
+
+\begin{proof}[Proof (outline)]
+For $t>1$, $G(\cdot)$ at $x=0$ has $G'(y)=y/t-\arctan y$, so $y=0$ is a
+critical point with $G''(0)=(1-t)/t<0$ (a local \emph{maximum}). Since
+$\arctan y/y$ decreases from $1$ to $0$ on $(0,\infty)$, there is exactly one
+positive root $y^*$ of $\arctan y=y/t$, and by oddness of $G'$ the
+minimisers at $x=0$ are the two points $\pm y^*$: a tie, hence a jump at
+$x=0$, with $u_\ell=(0-(-y^*))/t=y^*/t=\arctan y^*$ and $u_r=-u_\ell$.
+From $\arctan y>y/(1+y^2)$ for $y>0$ we get $1+y^{*2}>t$, so
+$\Phi_t'(y)=1-t/(1+y^2)>0$ for $y\ge y^*$: on $[y^*,\infty)$ the map
+$\Phi_t$ is strictly increasing from $0$ to $\infty$. For $x>0$, every
+minimiser is $\ge y^*$ because the minimiser is nondecreasing in $x$
+\cite[\S3.4.2]{evans2010}; so the minimiser is the unique root of
+\eqref{eq:arctan-critical} in $[y^*,\infty)$, which gives
+\eqref{eq:arctan-outer} (using $u=(x-y)/t=-\arctan y$), and in particular
+there is no other jump. Oddness gives $x<0$. For the asymptotics, write
+$\arctan y^*=y^*/t$ and $y^*\approx\sqrt{3(1-1/t)}$ from
+$\arctan y=y-y^3/3+O(y^5)$ near $t=1$; and for $t\ge2$ the inequality $1+y^{*2}>t$ forces $y^*>1$, so
+$y^*=t\arctan y^*\ge t\pi/4\to\infty$ and $\arctan y^*\to\pi/2$.
+\end{proof}
+
+Thus the shock is born at $(0,1)$ with zero strength, grows like
+$\sqrt{3(t-1)}$, and saturates at $\pi/2$ --- the full jump between the
+limits $u_0(-\infty)=\pi/2$ and $u_0(+\infty)=-\pi/2$ of the data, so
+$u(\cdot,t)\to-\tfrac\pi2\operatorname{sgn}x$. This replaces the symmetry
+remark of Section~\ref{subsec:shock-example} by an explicit shock strength
+(Figure~\ref{fig:arctan}, left). Numerically, the parametrisation
+\eqref{eq:arctan-outer} agrees with a brute-force minimisation of $G$ to
+within the grid resolution ($\lesssim5\times10^{-4}$ for
+$t\in\{0.5,1,2,5\}$), and $u_\ell/\sqrt{3(t-1)}=0.9999,\,0.9994,\,0.994,\,
+0.945$ for $t-1=10^{-4},10^{-3},10^{-2},10^{-1}$.
+
+\subsubsection{Vanishing viscosity for this example: a prediction and a check}
+
+Theorem~\ref{thm:vanishing-viscosity} asserts that the Cole--Hopf solutions
+$u^\nu$ converge to this entropy solution. Here we can predict the size of
+the error, not just its vanishing.
+
+\emph{Prediction.} Near the shock, $u^\nu$ should look like a stationary
+viscous shock. By Proposition~\ref{prop:viscous-profile} (with $s=0$ and
+$\Delta=2a$) such a shock is $-a\tanh(ax/2\nu)$, and its $L^1$ distance from the
+sharp shock $-a\operatorname{sgn}x$ is $4\ln2\,\nu\approx2.77\,\nu$,
+independent of the strength $a$. So if $u^\nu$ is locally a stationary shock of
+slowly varying strength $a=u_\ell(t)$, the layer contributes
+$\approx4\ln2\,\nu$ to $\|u^\nu-u\|_{L^1}$, and the rest of the error comes
+from the smooth part, as an $O(\nu)$ viscous correction.
+
+\emph{Check.} We evaluated \eqref{eq:cole-hopf-formula} with the above $V$
+by quadrature (log-sum-exp stabilisation of the weights $e^{-G/2\nu}$) and
+compared with Proposition~\ref{prop:arctan-solution} at $t=3$
+(Figure~\ref{fig:arctan}, right). Table~\ref{tab:arctan-visc} gives the
+$L^1(-6,6)$ error: it is first order in $\nu$ and tends to $\approx3.11\,\nu$.
+Splitting the integral at $|x|=0.05$ gives a layer contribution of
+$2.78\,\nu$ (for $\nu=0.003,\,0.001,\,0.0003$) against the predicted
+$2.77\,\nu$, within $0.5\%$, and a smooth-part contribution of
+$\approx0.33\,\nu$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{r r r r r r r r}
+  $\nu$ & $0.1$ & $0.03$ & $0.01$ & $0.003$ & $0.001$ & $0.0003$ & $0.0001$ \\\hline
+  $\|u^\nu-u\|_{L^1(-6,6)}$ & $3.16\!\times\!10^{-1}$ & $9.36\!\times\!10^{-2}$ &
+    $3.11\!\times\!10^{-2}$ & $9.34\!\times\!10^{-3}$ & $3.11\!\times\!10^{-3}$ &
+    $9.33\!\times\!10^{-4}$ & $3.10\!\times\!10^{-4}$ \\
+  error$/\nu$ & 3.156 & 3.122 & 3.114 & 3.112 & 3.111 & 3.110 & 3.104 \\
+  order (vs.\ previous $\nu$) & --- & 1.01 & 1.00 & 1.00 & 1.00 & 1.00 & 1.00
+\end{tabular}
+\caption{$L^1$ error of the Cole--Hopf solution against the entropy solution
+at $t=3$.}
+\label{tab:arctan-visc}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/arctan_shock_strength.pdf}
+\includegraphics[width=0.48\textwidth]{figures/arctan_vanishing_viscosity.pdf}
+\caption{Left: shock strength $u_\ell(t)=\arctan y^*(t)$ for
+$u_0=-\arctan x$, with the small-$(t-1)$ asymptote and the limit $\pi/2$.
+Right: Cole--Hopf solutions at $t=3$ for decreasing $\nu$ against the entropy
+solution (black).}
+\label{fig:arctan}
+\end{figure}
+
+\emph{Is the layer error independent of the strength?} The prediction says
+the layer contribution does not depend on $a$, whereas the data of
+Table~\ref{tab:arctan-visc} all have $a=u_\ell(3)\approx1.32$. We repeated the
+measurement at other times, i.e.\ other strengths
+(\texttt{code/strength\_independence.py}, $\nu=3\times10^{-4}$), computing
+the ratio of the error inside $|x|<\delta$ to $4\ln2\,\nu$ (prediction: $1$).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c c c c c}
+  $t$ & strength $a$ & outer slope $u_x(0^+)$ & ratio, $\delta=0.05$ & ratio, $\delta=0.005$ \\\hline
+  1.1  & 0.518 & $-4.46$  & 1.464 & 1.087 \\
+  1.5  & 0.967 & $-0.62$  & 1.054 & 1.006 \\
+  3    & 1.324 & $-0.073$ & 1.004 & 1.0004 \\
+  10   & 1.504 & $-0.005$ & 1.000 & 0.9999
+\end{tabular}
+\caption{Layer error divided by $4\ln2\,\nu$ for several shock strengths.}
+\label{tab:strength-independence}
+\end{table}
+
+The ratio tends to $1$ as the window shrinks, at every strength tested. With
+the wider window it deviates when the outer solution is steep beside the
+shock (young shocks, $t$ close to $1$, large $|u_x(0^+)|$): then the smooth
+part's $O(\nu)$ correction, which lies inside the window, is large, and at
+$t=1.1$ the ratio at $\delta=0.005$ is still $9\%$ above $1$ and not
+converged. So the prediction is confirmed where the shock is established
+(its strength varies by a factor of $3$ across the table), and the early
+deviations are explained by contamination from the outer solution, not by a
+failure of the layer picture; this explanation is supported by the trend in
+$\delta$ but not proved.
+
+\noindent These are numerical observations for one data set,
+not theorems; for general bounded data one only expects the weaker convergence
+of Theorem~\ref{thm:vanishing-viscosity}. The prediction identifies the
+layer part of the error exactly, but the $0.33\,\nu$ smooth-part constant is
+only measured, not derived.

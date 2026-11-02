@@ -1,0 +1,54 @@
+\documentclass[10pt]{article}
+
+% ---------- Packages ----------
+\usepackage[margin=0.7in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{bm}
+\usepackage{tikz}
+
+% ---------- Reduce vertical space around display equations ----------
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\setlength{\jot}{2pt}
+
+% ---------- Tighten spacing in cases/array blocks ----------
+\renewcommand{\arraystretch}{0.8}
+
+% ---------- Theorem environments ----------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---------- Title ----------
+\title{Shocks, Weak Solutions, and Entropy: \\ An Exposition of Burgers' Equation}
+\author{Russell Ng (A0213913M) \\ MA4221 Partial Differential Equations}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/motivation}
+\input{sections/characteristics}
+\input{sections/shock_formation}
+\input{sections/weak_solutions}
+\input{sections/nonuniqueness}
+\input{sections/entropy_condition}
+\input{sections/riemann_problem}
+\input{sections/extensions}
+\input{sections/conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

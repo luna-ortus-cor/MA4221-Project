@@ -1,0 +1,570 @@
+\section{Extensions}
+\label{sec:extensions}
+
+\subsection{The Cole--Hopf transformation}
+\label{subsec:cole-hopf}
+
+This extension reintroduces viscosity and solves the viscous Burgers'
+equation \eqref{eq:viscous-burgers} exactly, using the potential-flow
+structure noted in Remark~\ref{rem:vorticity-free}.
+
+\begin{theorem}[Cole--Hopf transformation]
+\label{thm:cole-hopf}
+Let $u$ solve $u_t+u\,u_x=\nu\,u_{xx}$, and define $\varphi>0$ by
+\begin{equation}
+  \label{eq:cole-hopf-def}
+  u = -2\nu\,\frac{\varphi_x}{\varphi}, \qquad \text{i.e.} \qquad \varphi(x,t) = \exp\left(-\frac{1}{2\nu}\int_0^x u(y,t)\, dy\right).
+\end{equation}
+Then $\varphi$ solves the heat equation $\varphi_t = \nu\, \varphi_{xx}$.
+\end{theorem}
+
+\begin{proof}
+Write $\psi = \ln\varphi$, so $u=-2\nu\,\psi_x$. Substituting into the
+viscous Burgers' equation and dividing by $-2\nu$ gives
+\begin{equation}
+  \psi_{xt} - 2\nu\,\psi_x\psi_{xx} - \nu\,\psi_{xxx} = 0,
+\end{equation}
+which is exactly $\partial_x\big[\psi_t - \nu\,\psi_{xx} - \nu\,(\psi_x)^2\big]=0$.
+Hence $\psi_t - \nu\,\psi_{xx} - \nu\,(\psi_x)^2 = C(t)$ for some function
+$C$ of $t$ alone; since $u=-2\nu\,\psi_x$ is unchanged if $\psi$ is
+shifted by a function of $t$, $\varphi$ may be rescaled by
+$\exp\!\big(-\!\int_0^t C\big)$ without affecting $u$, so we may take
+$C\equiv0$:
+\begin{equation}
+  \label{eq:psi-equation}
+  \psi_t = \nu\,\psi_{xx} + \nu\,(\psi_x)^2.
+\end{equation}
+Since $\varphi=e^\psi$ gives $\varphi_t=\varphi\,\psi_t$ and
+$\varphi_{xx}=\varphi\big(\psi_{xx}+(\psi_x)^2\big)$, equation
+\eqref{eq:psi-equation} is equivalent to $\varphi_t=\nu\,\varphi_{xx}$.
+\end{proof}
+
+\subsection{Exact solution via the heat kernel}
+\label{subsec:cole-hopf-solution}
+
+By Theorem~\ref{thm:cole-hopf}, solving \eqref{eq:viscous-burgers} reduces
+to solving the heat equation for $\varphi$ with initial data
+\begin{equation}
+  \label{eq:phi0}
+  \varphi_0(x) = \exp\left(-\frac{1}{2\nu}\int_0^x u_0(y)\, dy\right),
+\end{equation}
+which is given by convolution with the heat kernel,
+\begin{equation}
+  \label{eq:phi-heat-kernel}
+  \varphi(x,t) = \int_{\mathbb{R}} \frac{1}{\sqrt{4\pi\nu t}}\,
+    \exp\left(-\frac{(x-y)^2}{4\nu t}\right) \varphi_0(y)\, dy.
+\end{equation}
+Substituting \eqref{eq:phi0}--\eqref{eq:phi-heat-kernel} into
+$u=-2\nu\,\varphi_x/\varphi$ and differentiating under the integral gives
+the explicit \emph{Cole--Hopf formula}
+\begin{equation}
+  \label{eq:cole-hopf-formula}
+  u(x,t) = \frac{\displaystyle\int_{\mathbb{R}} \frac{x-y}{t}\, \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy}
+                {\displaystyle\int_{\mathbb{R}} \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy},
+  \qquad
+  G(x,y,t) = \int_0^y u_0(s)\, ds + \frac{(x-y)^2}{2t}.
+\end{equation}
+
+\begin{corollary}[Global smoothness]
+\label{cor:global-smoothness}
+For every bounded measurable $u_0$ and every $\nu>0$, formula
+\eqref{eq:cole-hopf-formula} defines the unique bounded solution of
+\eqref{eq:viscous-burgers}, and this solution is $C^\infty$ for all
+$t>0$.
+\end{corollary}
+
+Unlike the inviscid equation (Proposition~\ref{prop:shock-time}),
+solutions of \eqref{eq:viscous-burgers} stay smooth for all time, for
+any $\nu>0$ however small: advection and viscous diffusion together do
+not by themselves produce singularities (Remark~\ref{rem:navier-stokes-relevance}).
+
+\subsection{The vanishing viscosity limit}
+\label{subsec:vanishing-viscosity}
+
+The Cole--Hopf solution also explains why the Lax entropy condition of
+Section~\ref{sec:entropy-condition} is the physically correct selection
+principle, rather than an arbitrary one.
+
+\begin{theorem}[Vanishing viscosity limit; Hopf, 1950]
+\label{thm:vanishing-viscosity}
+Let $u_0\in L^\infty(\mathbb{R})$, let $u^\nu$ denote the solution of
+\eqref{eq:viscous-burgers} with data $u_0$ given by
+\eqref{eq:cole-hopf-formula}, and let $u$ denote the entropy solution of
+\eqref{eq:inviscid-burgers} with the same data
+(Theorem~\ref{thm:riemann-solution}, extended to general $u_0$ by the same
+selection principle). Then $u^\nu \to u$ pointwise almost everywhere,
+and in $L^1_{\mathrm{loc}}$, as $\nu \to 0^+$ \cite{hopf1950}.
+\end{theorem}
+
+The proof (a Laplace-method asymptotic analysis of
+\eqref{eq:cole-hopf-formula} as $\nu\to0$, showing the integral
+concentrates near the $y$ minimising $G(x,y,t)$) is not reproduced here.
+Its significance is conceptual: the entropy condition of
+Definition~\ref{def:lax-entropy} is not an ad hoc rule imposed to force
+uniqueness, but exactly the criterion selected by the physically natural
+limit of vanishing viscosity --- the same limit by which the inviscid
+equation \eqref{eq:inviscid-burgers} was justified as an idealisation of
+\eqref{eq:viscous-burgers} in Section~\ref{sec:motivation}.
+
+\subsection{General convex flux}
+\label{subsec:general-flux}
+
+The theory of Sections~\ref{sec:weak-solutions}--\ref{sec:riemann-problem}
+was developed for the specific flux $f(u)=u^2/2$, but, as noted in
+Section~\ref{subsec:conservation-law-framework}, none of it relies on
+this choice beyond convexity of $f$. This extension records how the main
+results generalise to an arbitrary $f \in C^2(\mathbb{R})$ with
+$f''>0$ everywhere.
+
+\begin{proposition}[General Rankine--Hugoniot and Lax conditions]
+\label{prop:general-rh-lax}
+For a weak solution of $u_t+f(u)_x=0$ with a jump from $u_\ell$ to $u_r$
+along $x=s(t)$, the Rankine--Hugoniot condition reads
+\begin{equation}
+  \label{eq:general-rh}
+  s'(t) = \frac{f(u_\ell)-f(u_r)}{u_\ell-u_r},
+\end{equation}
+and the Lax entropy condition reads $f'(u_\ell) > s'(t) > f'(u_r)$. Since
+$f$ is convex, $f'$ is strictly increasing, so this is equivalent to
+$u_\ell > u_r$, exactly as in the Burgers' case \eqref{eq:lax-burgers}.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The proofs of Theorem~\ref{thm:rankine-hugoniot} and
+Proposition~\ref{prop:entropy-selects-B} used only integration by parts
+and the definition of the weak formulation, independent of the specific
+form of $f$, so they carry over verbatim.
+\end{proof}
+
+\begin{proposition}[General Riemann solution]
+\label{prop:general-riemann}
+For $f$ strictly convex, the entropy solution of $u_t+f(u)_x=0$ with data
+\eqref{eq:general-riemann-data} is:
+\begin{enumerate}
+  \item[\textup{(a)}] If $u_\ell>u_r$: the shock \eqref{eq:riemann-shock}
+  with speed $s$ given by \eqref{eq:general-rh}.
+  \item[\textup{(b)}] If $u_\ell \leq u_r$: the rarefaction fan
+  \begin{equation}
+    \label{eq:general-rarefaction}
+    u(x,t) = \begin{cases}
+      u_\ell, & x \le f'(u_\ell)\, t, \\
+      (f')^{-1}(x/t), & f'(u_\ell)\, t < x < f'(u_r)\, t, \\
+      u_r, & x \ge f'(u_r)\, t,
+    \end{cases}
+  \end{equation}
+  where $(f')^{-1}$ is well defined since $f'$ is strictly increasing.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The self-similar ansatz $u(x,t)=g(x/t)$ substituted into $u_t+f(u)_x=0$
+gives $g'(\xi)\big(f'(g(\xi))-\xi\big)=0$ (the general-flux analogue of
+the computation in Section~\ref{subsec:rarefaction-general}), so either
+$g$ is constant or $f'(g(\xi))=\xi$, i.e. $g(\xi)=(f')^{-1}(\xi)$. Taking
+$\xi = f'(u_\ell)$ and $\xi=f'(u_r)$ as the two matching boundaries
+recovers \eqref{eq:general-rarefaction}; continuity at both boundaries
+and vanishing of the corresponding boundary terms in the weak formulation
+follow exactly as in the proof of Theorem~\ref{thm:riemann-solution}(b).
+Part (a) follows exactly as in Theorem~\ref{thm:riemann-solution}(a),
+using Proposition~\ref{prop:general-rh-lax} in place of
+\eqref{eq:lax-burgers}.
+\end{proof}
+
+\begin{remark}
+Taking $f(u)=u^2/2$ gives $f'(u)=u$ and $(f')^{-1}(\xi)=\xi$, recovering
+Theorem~\ref{thm:riemann-solution} exactly. The role of convexity is
+essential: it is what guarantees $f'$ is strictly increasing, which is in
+turn what makes the Lax condition equivalent to the simple inequality
+$u_\ell>u_r$, and what makes $(f')^{-1}$ well defined in
+\eqref{eq:general-rarefaction}. For non-convex $f$, both the entropy
+condition and the Riemann solution are more intricate (they generally
+involve the convex hull of $f$ between $u_\ell$ and $u_r$), and are not
+treated here.
+\end{remark}
+
+\subsection{A numerical scheme: Godunov's method}
+\label{subsec:godunov}
+
+This extension outlines a numerical scheme for the conservation law
+$u_t+f(u)_x=0$ that uses the exact Riemann solution of
+Theorem~\ref{thm:riemann-solution} as its building block, and states its
+convergence to the entropy solution.
+
+\subsubsection{Finite volume discretisation}
+\label{subsubsec:finite-volume}
+
+Divide $\mathbb{R}$ into cells $[x_{j-1/2}, x_{j+1/2}]$ of width $\Delta
+x$, with cell averages
+\begin{equation}
+  U_j^n \approx \frac{1}{\Delta x}\int_{x_{j-1/2}}^{x_{j+1/2}} u(x, t^n)\, dx,
+\end{equation}
+at times $t^n = n\Delta t$. Integrating $u_t+f(u)_x=0$ over a cell and
+over $[t^n,t^{n+1}]$ gives the exact identity
+\begin{equation}
+  U_j^{n+1} = U_j^n - \frac{\Delta t}{\Delta x}
+  \left( \widehat{f}_{j+1/2} - \widehat{f}_{j-1/2} \right),
+\end{equation}
+where $\widehat f_{j+1/2}$ is the (time-averaged) flux through the
+interface $x_{j+1/2}$, which must be approximated by a \emph{numerical
+flux function} $\widehat f_{j+1/2} = \widehat f(U_j^n, U_{j+1}^n)$.
+
+\subsubsection{The Godunov flux}
+\label{subsubsec:godunov-flux}
+
+Godunov's method defines $\widehat f$ by solving, at each interface, the
+Riemann problem with left and right states $U_j^n$ and $U_{j+1}^n$
+\emph{exactly}, using Theorem~\ref{thm:riemann-solution}, and evaluating
+the resulting self-similar solution along $x/t=0$:
+\begin{equation}
+  \label{eq:godunov-flux}
+  \widehat f_{j+1/2} = f\big(u^R(0;\, U_j^n, U_{j+1}^n)\big),
+\end{equation}
+where $u^R(\xi; u_\ell, u_r)$ denotes the value at self-similar
+coordinate $\xi=x/t$ of the entropy solution from
+Theorem~\ref{thm:riemann-solution} with data $(u_\ell,u_r)$. Concretely,
+by \eqref{eq:riemann-shock}--\eqref{eq:riemann-rarefaction},
+\begin{equation}
+  u^R(0; u_\ell,u_r) =
+  \begin{cases}
+    u_\ell, & u_\ell>u_r,\ s=\tfrac{u_\ell+u_r}{2}>0, \\
+    u_r, & u_\ell>u_r,\ s<0, \\
+    u_\ell, & u_\ell\le u_r,\ u_\ell\ge0, \\
+    u_r, & u_\ell\le u_r,\ u_r\le0, \\
+    0, & u_\ell < 0 < u_r,
+  \end{cases}
+\end{equation}
+the last case corresponding to $\xi=0$ lying inside the rarefaction fan of
+\eqref{eq:riemann-rarefaction}, i.e. $u^R(0)=(f')^{-1}(0)=0$ for Burgers'
+flux.
+
+\subsubsection{Stability and convergence}
+\label{subsubsec:godunov-convergence}
+
+\begin{proposition}[CFL condition]
+\label{prop:cfl}
+The Godunov scheme is stable provided the time step satisfies
+\begin{equation}
+  \label{eq:cfl}
+  \Delta t \le \frac{\Delta x}{\max_j |f'(U_j^n)|}.
+\end{equation}
+\end{proposition}
+
+Condition \eqref{eq:cfl} (the Courant--Friedrichs--Lewy condition)
+ensures that information does not propagate across more than one cell
+per time step, consistent with the finite propagation speed of
+characteristics established in Section~\ref{sec:characteristics}.
+
+\begin{theorem}[Convergence; see \cite{evans2010} and standard finite
+volume references]
+\label{thm:godunov-convergence}
+Under \eqref{eq:cfl}, the Godunov approximations converge, as $\Delta x,
+\Delta t \to 0$, to the unique entropy solution of
+Theorem~\ref{thm:oleinik-uniqueness}.
+\end{theorem}
+
+\begin{remark}
+This gives a second, independent route to the solutions constructed by
+hand in Sections~\ref{sec:nonuniqueness}--\ref{sec:riemann-problem}: an
+implementation of \eqref{eq:godunov-flux} applied to the Riemann data
+\eqref{eq:riemann-data} should reproduce the shock speed $s=1/2$ and the
+linear profile $u=x/t$ inside the rarefaction fan, providing a
+computational check on the exact formulas derived analytically above.
+\end{remark}
+
+\subsubsection{Numerical results}
+\label{subsubsec:godunov-results}
+
+The scheme of Section~\ref{subsubsec:finite-volume}--\ref{subsubsec:godunov-flux}
+was implemented with $N=400$ cells on $x\in[-2,2]$, using the CFL number
+$0.45$ in \eqref{eq:cfl}, and run to $t=1$ on both Riemann problems
+considered earlier: the rarefaction data $(u_\ell,u_r)=(0,1)$ of
+Section~\ref{sec:nonuniqueness}, and the shock data $(u_\ell,u_r)=(1,0)$.
+Figure~\ref{fig:godunov-results} compares the numerical solution against
+the exact entropy solution of Theorem~\ref{thm:riemann-solution}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.48\textwidth]{figures/godunov_rarefaction.pdf}
+\includegraphics[width=0.48\textwidth]{figures/godunov_shock.pdf}
+\caption{Godunov scheme (blue dots, $N=400$ cells) against the exact
+entropy solution (red) of Theorem~\ref{thm:riemann-solution}, at
+$t=1$. Left: rarefaction data $(u_\ell,u_r)=(0,1)$; the scheme
+reproduces the linear fan $u=x/t$, with mild smearing at the two corners
+typical of a first-order scheme. Right: shock data $(u_\ell,u_r)=(1,0)$;
+the discontinuity is captured sharply at $x=st=0.5$, exactly the
+Rankine--Hugoniot speed from \eqref{eq:rankine-hugoniot-burgers}, with
+no spurious oscillation.}
+\label{fig:godunov-results}
+\end{figure}
+
+The measured $L^1$ errors between the numerical and exact solutions are
+approximately $4.5\times10^{-3}$ (rarefaction case) and $1.2\times10^{-3}$
+(shock case), consistent with the first-order convergence rate of
+Theorem~\ref{thm:godunov-convergence}; the shock case converges faster
+per cell because the error is concentrated in the single cell straddling
+the discontinuity, whereas the rarefaction error accumulates gradually
+across the two fan corners.
+
+\subsection{Interaction of two shocks}
+\label{subsec:shock-interaction}
+
+This extension studies what happens when two shocks, moving at different
+speeds, collide. Remarkably, the answer follows directly from
+Theorem~\ref{thm:riemann-solution} without any new machinery.
+
+\subsubsection{Setup}
+\label{subsubsec:interaction-setup}
+
+Consider three constant states $u_1 > u_2 > u_3$ and initial data
+\begin{equation}
+  \label{eq:three-state-data}
+  u_0(x) = \begin{cases} u_1, & x<a, \\ u_2, & a<x<b, \\ u_3, & x>b, \end{cases}
+  \qquad a<b.
+\end{equation}
+Since $u_1>u_2$ and $u_2>u_3$, both jumps individually satisfy the Lax
+condition \eqref{eq:lax-burgers}, so for small $t>0$ the entropy solution
+consists of two shocks, moving at the Rankine--Hugoniot speeds
+\begin{equation}
+  \label{eq:two-shock-speeds}
+  s_{12} = \frac{u_1+u_2}{2}, \qquad s_{23} = \frac{u_2+u_3}{2},
+\end{equation}
+with positions $x_L(t) = a+s_{12}\,t$ and $x_R(t) = b+s_{23}\,t$, exactly
+as in Theorem~\ref{thm:riemann-solution}(a) applied locally at each jump.
+
+\subsubsection{Collision time}
+\label{subsubsec:collision-time}
+
+\begin{proposition}[Shock collision]
+\label{prop:shock-collision}
+Since $u_1>u_2>u_3$, $s_{12}>s_{23}$, so the two shocks collide at the
+finite time
+\begin{equation}
+  \label{eq:collision-time}
+  t^{\times} = \frac{b-a}{s_{12}-s_{23}} = \frac{2(b-a)}{u_1-u_3},
+\end{equation}
+at the point $x^{\times} = a + s_{12}\, t^{\times}$.
+\end{proposition}
+
+\begin{proof}
+$s_{12}-s_{23} = \tfrac12(u_1+u_2) - \tfrac12(u_2+u_3) = \tfrac12(u_1-u_3)
+> 0$, so $x_L(t)$ and $x_R(t)$ are both affine in $t$ with $x_L$
+increasing faster than $x_R$ and $x_L(0)=a<b=x_R(0)$; they therefore meet
+at a unique finite time, found by solving $x_L(t^\times)=x_R(t^\times)$,
+which gives \eqref{eq:collision-time}.
+\end{proof}
+
+\subsubsection{The solution after collision}
+\label{subsubsec:post-collision}
+
+\begin{theorem}[Merged shock]
+\label{thm:merged-shock}
+For $t \geq t^\times$, the entropy solution of \eqref{eq:three-state-data}
+is the single shock
+\begin{equation}
+  \label{eq:merged-shock}
+  u(x,t) = \begin{cases} u_1, & x < x^\times + s_{13}(t-t^\times), \\
+                          u_3, & x > x^\times + s_{13}(t-t^\times), \end{cases}
+  \qquad s_{13} = \frac{u_1+u_3}{2}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+At $t=t^\times$, the middle state $u_2$ occupies the shrinking interval
+$[x_L(t), x_R(t)]$, which by construction has width $0$ exactly at
+$t^\times$; hence at $t=t^\times$ the solution is precisely the two-state
+Riemann data $u(x,t^\times) = u_1$ for $x<x^\times$, $u_3$ for
+$x>x^\times$, with no intermediate state remaining. Since $u_1>u_3$, this
+is exactly the hypothesis of Theorem~\ref{thm:riemann-solution}(a)
+(shifted to start at time $t^\times$ and position $x^\times$ rather than
+$0$ and $0$, which does not affect the argument, as the equation is
+autonomous in both $x$ and $t$), whose unique entropy solution for
+$t\geq t^\times$ is exactly the shock \eqref{eq:merged-shock}.
+\end{proof}
+
+\begin{remark}
+Theorem~\ref{thm:merged-shock} illustrates a general principle: an
+entropy solution's dependence on only the two bounding Riemann states
+means any intermediate structure that shrinks to a point is simply
+forgotten. This is also why the Godunov scheme of
+Section~\ref{subsec:godunov} handles merging shocks with no special
+logic: each time step re-solves a fresh Riemann problem at every
+interface.
+\end{remark}
+
+\subsection{A damped Burgers' equation}
+\label{subsec:damped-burgers}
+
+This extension adds a linear damping term,
+\begin{equation}
+  \label{eq:damped-burgers}
+  u_t + u\, u_x = -\beta\, u, \qquad \beta > 0,
+\end{equation}
+and asks how damping affects the shock formation result of
+Proposition~\ref{prop:shock-time}. Equation \eqref{eq:damped-burgers}
+arises, for instance, as a model for weakly nonlinear waves subject to
+linear dissipation.
+
+\subsubsection{Characteristics with damping}
+\label{subsubsec:damped-characteristics}
+
+Along a curve $x(t)$ with $\dot x(t) = u(x(t),t)$, the chain rule together
+with \eqref{eq:damped-burgers} gives
+\begin{equation}
+  \frac{d}{dt}\, u(x(t),t) = u_t + u\, u_x = -\beta\, u(x(t),t),
+\end{equation}
+so $u$ no longer stays constant along characteristics, but decays
+exponentially:
+\begin{equation}
+  \label{eq:damped-u-along-char}
+  u(x(t),t) = u_0(x_0)\, e^{-\beta t}.
+\end{equation}
+Substituting \eqref{eq:damped-u-along-char} into $\dot x(t)=u(x(t),t)$ and
+integrating gives the characteristic curves explicitly:
+\begin{equation}
+  \label{eq:damped-characteristic}
+  x(t) = x_0 + u_0(x_0)\, \frac{1-e^{-\beta t}}{\beta}.
+\end{equation}
+Unlike the undamped case, these are no longer straight lines, but they
+remain explicit, and the implicit solution formula generalises exactly
+as in Theorem~\ref{thm:implicit-solution}: $u(x,t) = u_0(x_0)e^{-\beta t}$
+where $x$ and $x_0$ are related by \eqref{eq:damped-characteristic},
+valid wherever
+\begin{equation}
+  \label{eq:damped-phi}
+  \Phi_t^\beta(x_0) := x_0 + u_0(x_0)\,\frac{1-e^{-\beta t}}{\beta}
+\end{equation}
+is invertible.
+
+\subsubsection{A threshold for shock formation}
+\label{subsubsec:damping-threshold}
+
+\begin{theorem}[Damping can prevent shock formation]
+\label{thm:damped-shock-threshold}
+Let $m = \min_{x_0} u_0'(x_0)$. If $m \geq -\beta$, the classical solution
+of \eqref{eq:damped-burgers} exists for all $t \geq 0$. If $m < -\beta$,
+a shock forms at the finite time
+\begin{equation}
+  \label{eq:damped-shock-time}
+  T^*_\beta = -\frac{1}{\beta} \ln\!\left(1 + \frac{\beta}{m}\right).
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+As in the proof of Proposition~\ref{prop:shock-time}, breakdown occurs at
+the first time some $(\Phi_t^\beta)'(x_0) = 1 + u_0'(x_0)\,
+\frac{1-e^{-\beta t}}{\beta}$ vanishes. Writing $\tau(t) =
+(1-e^{-\beta t})/\beta$, this requires $\tau(t) = -1/u_0'(x_0)$ for some
+$x_0$, which (since $\tau$ is increasing) is hardest to achieve for the
+most negative value of $u_0'$, namely $x_0$ attaining $m$. Since $\tau$
+increases monotonically from $\tau(0)=0$ towards $\tau(\infty) =
+1/\beta$ without ever reaching it, a finite solution $t$ to $\tau(t) =
+-1/m$ exists if and only if $-1/m < 1/\beta$, i.e. $m < -\beta$; solving
+$\tau(T_\beta^*) = -1/m$ for $T_\beta^*$ gives
+\eqref{eq:damped-shock-time}. If instead $m \geq -\beta$, then $-1/m \geq
+1/\beta \geq \tau(t)$ for every finite $t$ (interpreting $-1/m=\infty$ if
+$m=0$), so $(\Phi_t^\beta)'(x_0) > 0$ for every $x_0$ and every $t\geq0$,
+and the classical solution persists for all time by the same argument as
+Theorem~\ref{thm:implicit-solution}.
+\end{proof}
+
+\begin{remark}
+Setting $\beta=0$ recovers Proposition~\ref{prop:shock-time} exactly, as
+can be checked with L'H\^opital's rule on $-\frac1\beta\ln(1+\beta/m)$
+as $\beta\to0$. More strikingly, the theorem shows that for \emph{any}
+initial data, however steep, taking $\beta\geq -m$ prevents shock
+formation entirely: sufficiently strong linear damping smooths out the
+steepening mechanism of Section~\ref{sec:shock-formation} before
+characteristics can converge.
+\end{remark}
+
+\subsection{Long-time behaviour: the N-wave}
+\label{subsec:n-wave}
+
+This final extension describes the universal shape that entropy
+solutions with compactly supported initial data approach as $t \to
+\infty$, regardless of the detailed shape of $u_0$.
+
+\subsubsection{An exact self-similar solution}
+\label{subsubsec:n-wave-exact}
+
+\begin{proposition}[The N-wave]
+\label{prop:n-wave-exact}
+Fix constants $P, Q > 0$. The function
+\begin{equation}
+  \label{eq:n-wave}
+  N(x,t) = \begin{cases}
+    0, & x \le -\sqrt{2Qt}, \\
+    x/t, & -\sqrt{2Qt} < x < \sqrt{2Pt}, \\
+    0, & x \ge \sqrt{2Pt},
+  \end{cases}
+  \qquad t>0,
+\end{equation}
+is an entropy solution of $u_t+u\,u_x=0$ on $\mathbb{R}\times(0,\infty)$.
+\end{proposition}
+
+\begin{proof}
+On the open middle interval, $N(x,t)=x/t$ is exactly the self-similar
+rarefaction profile of Section~\ref{subsec:rarefaction-general}, which
+solves the PDE classically there; the outer regions are trivially
+constant solutions. At the right edge $x_+(t)=\sqrt{2Pt}$, the one-sided
+limits are $u_\ell = x_+(t)/t = \sqrt{2P/t}$ and $u_r=0$; since
+$\dot x_+(t) = \sqrt{P/(2t)} = \tfrac12\big(\sqrt{2P/t}+0\big)$, this is
+exactly the Rankine--Hugoniot speed \eqref{eq:rankine-hugoniot-burgers},
+and $u_\ell > u_r$ so the Lax condition \eqref{eq:lax-burgers} holds. The
+same check at the left edge $x_-(t)=-\sqrt{2Qt}$, where $u_\ell=0$ and
+$u_r=-\sqrt{2Q/t}$, gives $\dot x_-(t) = -\sqrt{Q/(2t)} =
+\tfrac12\big(0+(-\sqrt{2Q/t})\big)$, again matching
+\eqref{eq:rankine-hugoniot-burgers}, with $u_\ell=0>-\sqrt{2Q/t}=u_r$
+satisfying the Lax condition. Hence both jumps are entropy-admissible,
+and $N$ is an entropy solution by Theorem~\ref{thm:rankine-hugoniot} and
+Definition~\ref{def:lax-entropy}.
+\end{proof}
+
+The profile \eqref{eq:n-wave} is called an \emph{N-wave}: it rises
+linearly through the origin and is bounded by a shock on each side, so
+that its graph traces the shape of the letter N (reversed), decaying in
+amplitude like $t^{-1/2}$ and spreading in width like $t^{1/2}$ as
+$t\to\infty$. It is an exact solution for every $t>0$, though its formal
+limit as $t\to0^+$ is not an ordinary function of the type considered in
+Section~\ref{sec:weak-solutions}: both edges collapse to the origin,
+consistent with $N(\cdot,t)$ representing, in the limit, a state
+concentrated entirely at a point.
+
+\subsubsection{Convergence of general solutions to the N-wave}
+\label{subsubsec:n-wave-convergence}
+
+\begin{theorem}[Asymptotic N-wave decay; Lax, 1957 \cite{lax1957}]
+\label{thm:n-wave-decay}
+Let $u_0 \in L^1(\mathbb{R})$ have compact support, and set
+\begin{equation}
+  \label{eq:pq-areas}
+  P = \int_{\mathbb{R}} \max(u_0(x),0)\, dx, \qquad
+  Q = \int_{\mathbb{R}} \max(-u_0(x),0)\, dx.
+\end{equation}
+Then the entropy solution $u$ of \eqref{eq:ivp} satisfies
+\begin{equation}
+  \|u(\cdot,t) - N(\cdot,t)\|_{L^1(\mathbb{R})} \to 0 \qquad \text{as } t \to \infty,
+\end{equation}
+where $N$ is the N-wave \eqref{eq:n-wave} with the same constants $P,Q$.
+\end{theorem}
+
+The proof is not reproduced here, but the mechanism is exactly the
+shock-merging phenomenon of Section~\ref{subsec:shock-interaction}: a
+compactly supported $u_0$ produces, for small $t$, a solution with
+possibly many shocks and rarefactions, but by
+Theorem~\ref{thm:merged-shock} every pair of shocks that meet coalesces
+into one, so only finitely many discontinuities survive as $t\to\infty$.
+Since the total signed area $\int u(x,t)\,dx = P-Q$ is conserved for all
+$t$ (integrate \eqref{eq:weak-formulation} over all $x$), the surviving
+structure is forced into the unique self-similar shape consistent with
+these boundary areas --- exactly \eqref{eq:n-wave}.
+
+\begin{remark}
+This result explains the term ``N-wave'' as used in acoustics for the
+pressure signature of a sonic boom: an initially localised disturbance,
+regardless of its detailed shape, is predicted by the same mechanism to
+decay into the universal N-shaped profile of
+Proposition~\ref{prop:n-wave-exact} once nonlinear and dissipative
+effects have had enough time to act, with amplitude decaying as
+$t^{-1/2}$, exactly as observed for sonic booms far from their source.
+\end{remark}

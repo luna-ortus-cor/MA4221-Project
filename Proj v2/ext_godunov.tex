@@ -1,0 +1,277 @@
+% =====================================================================
+%  Section 8.4: Godunov's method.  Optional: remove the \input line in
+%  main.tex to drop this subsection (nothing else depends on it).
+% =====================================================================
+
+\subsection{A numerical scheme: Godunov's method}
+\label{subsec:godunov}
+
+This extension outlines Godunov's method \cite{godunov1959}, a numerical
+scheme for the conservation law
+$u_t+f(u)_x=0$ that uses the exact Riemann solution of
+Theorem~\ref{thm:riemann-solution} as its building block, and states its
+convergence to the entropy solution.
+
+\subsubsection{Finite volume discretisation}
+\label{subsubsec:finite-volume}
+
+Divide $\mathbb{R}$ into cells $[x_{j-1/2}, x_{j+1/2}]$ of width $\Delta
+x$, with cell averages
+\begin{equation}
+  U_j^n \approx \frac{1}{\Delta x}\int_{x_{j-1/2}}^{x_{j+1/2}} u(x, t^n)\, dx,
+\end{equation}
+at times $t^n = n\Delta t$. Integrating $u_t+f(u)_x=0$ over a cell and
+over $[t^n,t^{n+1}]$ gives the exact identity
+\begin{equation}
+  U_j^{n+1} = U_j^n - \frac{\Delta t}{\Delta x}
+  \left( \widehat{f}_{j+1/2} - \widehat{f}_{j-1/2} \right),
+\end{equation}
+where $\widehat f_{j+1/2}$ is the (time-averaged) flux through the
+interface $x_{j+1/2}$, which must be approximated by a \emph{numerical
+flux function} $\widehat f_{j+1/2} = \widehat f(U_j^n, U_{j+1}^n)$.
+
+\subsubsection{The Godunov flux}
+\label{subsubsec:godunov-flux}
+
+Godunov's method defines $\widehat f$ by solving, at each interface, the
+Riemann problem with left and right states $U_j^n$ and $U_{j+1}^n$
+\emph{exactly}, using Theorem~\ref{thm:riemann-solution}, and evaluating
+the resulting self-similar solution along $x/t=0$:
+\begin{equation}
+  \label{eq:godunov-flux}
+  \widehat f_{j+1/2} = f\big(u^R(0;\, U_j^n, U_{j+1}^n)\big),
+\end{equation}
+where $u^R(\xi; u_\ell, u_r)$ denotes the value at self-similar
+coordinate $\xi=x/t$ of the entropy solution from
+Theorem~\ref{thm:riemann-solution} with data $(u_\ell,u_r)$. Concretely,
+by \eqref{eq:riemann-shock}--\eqref{eq:riemann-rarefaction},
+\begin{equation}
+  u^R(0; u_\ell,u_r) =
+  \begin{cases}
+    u_\ell, & u_\ell>u_r,\ s=\tfrac{u_\ell+u_r}{2}>0, \\
+    u_r, & u_\ell>u_r,\ s<0, \\
+    u_\ell, & u_\ell\le u_r,\ u_\ell\ge0, \\
+    u_r, & u_\ell\le u_r,\ u_r\le0, \\
+    0, & u_\ell < 0 < u_r,
+  \end{cases}
+\end{equation}
+the last case corresponding to $\xi=0$ lying inside the rarefaction fan of
+\eqref{eq:riemann-rarefaction}, i.e. $u^R(0)=(f')^{-1}(0)=0$ for Burgers'
+flux. (In the shock case with $s=0$, i.e.\ $u_\ell=-u_r$, the value of
+$u^R(0)$ is ambiguous, but $f(u_\ell)=f(u_r)$ so the flux
+\eqref{eq:godunov-flux} is the same either way.)
+
+\subsubsection{Stability and convergence}
+\label{subsubsec:godunov-convergence}
+
+\begin{proposition}[CFL condition]
+\label{prop:cfl}
+The Godunov scheme is stable provided the time step satisfies
+\begin{equation}
+  \label{eq:cfl}
+  \Delta t \le \frac{\Delta x}{\max_j |f'(U_j^n)|}.
+\end{equation}
+\end{proposition}
+
+Condition \eqref{eq:cfl} (the Courant--Friedrichs--Lewy condition)
+ensures that information does not propagate across more than one cell
+per time step, consistent with the finite propagation speed of
+characteristics established in Section~\ref{sec:characteristics}. Two
+distinct requirements are worth separating (see \cite[Ch.~4]{leveque2002}).
+The flux \eqref{eq:godunov-flux} is the exact flux through $x_{j+1/2}$ as
+long as the state at that interface stays constant during the step, i.e.\
+no wave from a neighbouring interface reaches it; this holds for CFL
+number $\le1$, which is \eqref{eq:cfl}, and is all that stability and
+monotonicity of the scheme need. The ``reconstruct--evolve--average''
+picture, in which the exact solution in each cell is the superposition of
+the Riemann solutions from its two interfaces, requires in addition that
+these two sets of waves do not interact inside the cell, i.e.\ CFL number
+$\le\tfrac12$. The value $0.45$ used below satisfies both.
+
+% TODO: confirm the chapter/section numbers in LeVeque (Ch.~4 for Godunov's
+% method, Ch.~12 for convergence of monotone schemes) and the theorem number
+% in Crandall--Majda.  Note that this theorem asserts convergence, NOT a rate.
+\begin{theorem}[{Convergence; \cite{crandall1980}, \cite[Ch.~12]{leveque2002}}]
+\label{thm:godunov-convergence}
+Under \eqref{eq:cfl}, the Godunov approximations converge, as $\Delta x,
+\Delta t \to 0$, to the unique entropy solution of
+Theorem~\ref{thm:oleinik-uniqueness}.
+\end{theorem}
+
+\begin{remark}
+\label{rem:godunov-check}
+This gives a second, independent route to the solutions constructed by
+hand in Sections~\ref{sec:nonuniqueness}--\ref{sec:riemann-problem}: an
+implementation of \eqref{eq:godunov-flux} applied to the Riemann data
+\eqref{eq:riemann-data} should reproduce the shock speed $s=1/2$ and the
+linear profile $u=x/t$ inside the rarefaction fan, providing a
+computational check on the exact formulas derived analytically above.
+\end{remark}
+
+\subsubsection{Numerical results}
+\label{subsubsec:godunov-results}
+
+\emph{Setup.} The scheme of
+Sections~\ref{subsubsec:finite-volume}--\ref{subsubsec:godunov-flux} was
+implemented (Python/NumPy; script \texttt{code/godunov.py}) on
+$x\in[-2,2]$ with $N$ cells, initial cell averages of the Riemann data
+(the discontinuity lies on a cell interface), zero-gradient (outflow)
+boundary conditions, time step $\Delta t=0.45\,\Delta x/\max_j|U_j^n|$
+(CFL number $0.45$ in \eqref{eq:cfl}, last step shortened to land on
+$t=1$), and was run to $t=1$ on the rarefaction data
+$(u_\ell,u_r)=(0,1)$ of Section~\ref{sec:nonuniqueness} and the shock data
+$(u_\ell,u_r)=(1,0)$. The error is the $L^1$ error
+$\|U-u\|_{L^1(-2,2)}=\int|U-u|\,dx$ against the exact entropy solution of
+Theorem~\ref{thm:riemann-solution}, with the exact solution integrated
+over each cell (so the cell containing the shock is not mis-scored).
+Two sanity checks were passed: the case-based flux of
+\eqref{eq:godunov-flux} agrees with the closed form
+$\min_{[u_\ell,u_r]}f$ (if $u_\ell\le u_r$), $\max_{[u_r,u_\ell]}f$
+(otherwise) on $10^5$ random state pairs, and total mass equals the initial
+mass ($2$) plus the net boundary flux, namely $-0.5$ for the rarefaction
+problem (final mass $1.5$) and $+0.5$ for the shock problem (final mass
+$2.5$), to ten digits. Figure~\ref{fig:godunov-results} compares the numerical solution
+with $N=400$ against the exact solution.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.44\textwidth]{figures/godunov_rarefaction.pdf}
+\includegraphics[width=0.44\textwidth]{figures/godunov_shock.pdf}
+\caption{Godunov scheme (blue dots, $N=400$ cells) against the exact
+entropy solution (red) of Theorem~\ref{thm:riemann-solution}, at
+$t=1$. Left: rarefaction data $(u_\ell,u_r)=(0,1)$; the scheme
+reproduces the linear fan $u=x/t$, with smearing at the two corners
+(visibly larger at the upper corner $x=1$) typical of a first-order
+scheme. Right: shock data $(u_\ell,u_r)=(1,0)$; the discontinuity is
+located at the Rankine--Hugoniot position $x=st=0.5$
+(eq.~\eqref{eq:rankine-hugoniot-burgers}) and is spread over about three
+cells, with no overshoot or oscillation, as expected of a monotone
+scheme.}
+\label{fig:godunov-results}
+\end{figure}
+
+\emph{Convergence.} Table~\ref{tab:godunov-conv} and
+Figure~\ref{fig:godunov-conv} report the $L^1$ error for
+$N=200,400,\dots,6400$ (the choice of these resolutions is explained below).
+
+\begin{table}[h]
+\centering
+\begin{tabular}{r r r r r r}
+  $N$ & $\Delta x$ & $L^1$ (rarefaction) & order & $L^1$ (shock) & order \\\hline
+  200  & $2.0\times10^{-2}$ & $3.05\times10^{-2}$ & --- & $9.91\times10^{-3}$ & --- \\
+  400  & $1.0\times10^{-2}$ & $1.82\times10^{-2}$ & 0.74 & $4.98\times10^{-3}$ & 0.99 \\
+  800  & $5.0\times10^{-3}$ & $1.07\times10^{-2}$ & 0.77 & $2.50\times10^{-3}$ & 0.99 \\
+  1600 & $2.5\times10^{-3}$ & $6.14\times10^{-3}$ & 0.80 & $1.24\times10^{-3}$ & 1.01 \\
+  3200 & $1.25\times10^{-3}$ & $3.48\times10^{-3}$ & 0.82 & $6.23\times10^{-4}$ & 0.99 \\
+  6400 & $6.25\times10^{-4}$ & $1.95\times10^{-3}$ & 0.84 & $3.13\times10^{-4}$ & 0.99
+\end{tabular}
+\caption{$L^1$ errors of the Godunov scheme at $t=1$ and observed orders
+$\log_2(e_{N/2}/e_N)$ between consecutive rows. All $N$ are multiples of
+$8$, so the shock lies on a cell interface (see the text).}
+\label{tab:godunov-conv}
+\end{table}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.44\textwidth]{figures/godunov_convergence.pdf}
+\caption{$L^1$ error at $t=1$ against $\Delta x$ (log--log), with an
+$O(\Delta x)$ reference line.}
+\label{fig:godunov-conv}
+\end{figure}
+
+\emph{Shock: dependence on grid alignment.} The shock at $x=st=0.5$ lies
+on a cell interface exactly when $0.5/\Delta x=N/8$ is an integer, i.e.\
+when $8\mid N$. For such $N$ the shock error is $0.50\,\Delta x$ to two
+digits (values $0.495$--$0.501$; the observed order is $\approx1.0$, as in
+Table~\ref{tab:godunov-conv}). For other $N$ it depends on where the shock
+sits within a cell: for $N=97,\dots,103$ the error ranges from
+$0.60\,\Delta x$ to $0.77\,\Delta x$ (e.g.\ $0.655\,\Delta x$ at $N=100$,
+$0.746\,\Delta x$ at $N=97$), against $0.50\,\Delta x$ at $N=96$ and
+$N=104$. Observed orders between a misaligned and an aligned resolution are
+therefore unreliable: $N=100\to200$ would give an order of $1.40$ for the
+shock. This is why the table uses $N=200\cdot2^k$. In every case the error
+is proportional to $\Delta x$, consistent with the discontinuity being
+resolved over a fixed number of cells.
+
+\emph{Rarefaction.} Here the error also decreases monotonically, but the
+observed order is $\approx0.7$--$0.8$ and is still slowly increasing
+($0.74,0.77,0.80,0.82,0.84$), so these experiments do not by themselves
+establish a first-order rate. The larger error is attributable to the two
+corners of the fan, where the exact solution is only Lipschitz and the
+scheme's numerical diffusion smears it; we do not claim more than the data
+show. (Theorem~\ref{thm:godunov-convergence} asserts convergence, not a
+rate.) In both cases the computed shock position and fan slope agree with
+the analytic values $s=1/2$ and $u=x/t$ of
+Section~\ref{sec:riemann-problem}, which is the check proposed in
+Remark~\ref{rem:godunov-check}.
+
+\subsubsection{Numerical diffusion as vanishing viscosity}
+\label{subsubsec:numerical-viscosity}
+
+This subsection tests a heuristic that connects the scheme to the guiding
+question: a monotone scheme converges to the \emph{entropy} solution because
+its numerical diffusion acts as a vanishing viscosity (the mechanism of
+Section~\ref{subsec:vanishing-viscosity}). It is a consistency check, not a
+proof; the rigorous statement is Theorem~\ref{thm:godunov-convergence}.
+
+In the shock problem all states lie in $[0,1]$ and $s=\tfrac12>0$, so the
+Godunov flux is the upwind flux and the scheme reads $U_j^{n+1}=U_j^n-
+\lambda(f(U_j^n)-f(U_{j-1}^n))$ with $\lambda=\Delta t/\Delta x$. A Taylor
+expansion gives the modified equation
+\begin{equation}
+  \label{eq:modified-equation}
+  u_t+u\,u_x=\frac{\Delta x}{2}\big(u(1-\lambda u)\,u_x\big)_x+O(\Delta x^2),
+\end{equation}
+a viscous Burgers' equation with state-dependent viscosity
+$\nu(u)=\tfrac{\Delta x}2u(1-\lambda u)\ge0$ exactly when the CFL condition
+\eqref{eq:cfl} holds. Its travelling shock from $1$ to $0$, with speed
+$\tfrac12$, satisfies $\nu(u)\,u_\xi=\tfrac12u(u-1)$ in $\xi=x-t/2$, i.e.\ in
+units of $\Delta x$
+\begin{equation}
+  \frac{du}{d\xi}=\frac{u-1}{1-\lambda u},\qquad
+  \xi(u)=\xi_0+(1-\lambda)\ln(1-u)-\lambda u .
+\end{equation}
+The profile decays exponentially to $1$ as $\xi\to-\infty$ and reaches $0$ at
+a finite $\xi_0$. Conservation of mass (the scheme is conservative) fixes
+$\xi_0=1-\lambda/2$, and the $L^1$ distance from the sharp shock is
+\begin{equation}
+  \frac{\|u-u_{\rm exact}\|_{L^1}}{\Delta x}
+  =2\int_0^{u_0}\frac{u(1-\lambda u)}{1-u}\,du,\qquad
+  (1-\lambda)\ln(1-u_0)-\lambda u_0=-\Big(1-\frac\lambda2\Big).
+\end{equation}
+Table~\ref{tab:numerical-viscosity} compares this with the measured shock
+error on aligned grids (here $\lambda$ equals the CFL number, since
+$\max|U|=1$); the code is \texttt{code/numerical\_viscosity.py}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{c c c c}
+  CFL $=\lambda$ & measured ($N=1600$) & predicted & difference \\\hline
+  0.10 & 0.627 & 0.686 & $+9.4\%$ \\
+  0.20 & 0.589 & 0.635 & $+8.0\%$ \\
+  0.30 & 0.553 & 0.586 & $+5.8\%$ \\
+  0.45 & 0.496 & 0.511 & $+3.1\%$ \\
+  0.60 & 0.448 & 0.438 & $-2.4\%$ \\
+  0.80 & 0.352 & 0.342 & $-3.0\%$ \\
+  0.95 & 0.300 & 0.272 & $-9.3\%$
+\end{tabular}
+\caption{Shock $L^1$ error divided by $\Delta x$: measured Godunov (grids with
+$8\mid N$) against the modified-equation prediction.}
+\label{tab:numerical-viscosity}
+\end{table}
+
+The prediction is within $3\%$ at the CFL number $0.45$ used above and within
+$10\%$ across the whole range, and it reproduces the observed decrease of the
+error with $\lambda$. At CFL $0.95$ the measured value is still resolution
+dependent ($0.334$ at $N=400$, $0.300$ at $N=1600$), so that row is not
+asymptotic. Equating the error to the viscous-shock value $4\ln2\,\nu_{\rm eff}$
+of Proposition~\ref{prop:viscous-profile} (valid for any shock speed, here
+$s=\tfrac12$, $\Delta=1$, by Galilean invariance) defines an effective viscosity: the
+measured $0.50\,\Delta x$ gives $\nu_{\rm eff}\approx0.180\,\Delta x$, the
+modified-equation profile gives $0.184\,\Delta x$, and the cruder estimate
+$\tfrac{\Delta x}2u(1-\lambda u)$ at $u=\tfrac12$ gives $0.194\,\Delta x$.
+Since $\nu_{\rm eff}=O(\Delta x)\to0$, in the shock layer the scheme behaves
+like a vanishing viscosity, which is the numerical counterpart of
+Theorem~\ref{thm:vanishing-viscosity}. This agreement should not be over-read:
+the numerical shock occupies only a few cells, and
+\eqref{eq:modified-equation} neglects the $O(\Delta x^2)$ terms.

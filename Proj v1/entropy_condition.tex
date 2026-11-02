@@ -1,0 +1,89 @@
+\section{The Entropy Condition}
+\label{sec:entropy-condition}
+
+Corollary~\ref{cor:nonuniqueness} showed that the weak formulation alone
+does not determine a unique solution. This section introduces an
+additional condition, motivated by the vanishing-viscosity limit made
+precise in Section~\ref{sec:extensions}, that selects the physically
+correct weak solution among any competing candidates.
+
+\subsection{The Lax entropy condition}
+\label{subsec:lax-condition}
+
+\begin{definition}[Lax entropy condition]
+\label{def:lax-entropy}
+Let $u$ be a weak solution of a scalar conservation law $u_t+f(u)_x=0$
+with $f$ convex, having a jump discontinuity along a $C^1$ curve $x=s(t)$
+with left and right limits $u_\ell(t)$, $u_r(t)$. The jump satisfies the
+\emph{Lax entropy condition} if
+\begin{equation}
+  \label{eq:lax-condition}
+  f'(u_\ell(t)) > s'(t) > f'(u_r(t))
+\end{equation}
+for all $t$. A weak solution is an \emph{entropy solution} if every jump
+discontinuity it contains satisfies \eqref{eq:lax-condition}.
+\end{definition}
+
+For Burgers' equation, $f'(u)=u$, so \eqref{eq:lax-condition} together
+with the Rankine--Hugoniot speed $s'=(u_\ell+u_r)/2$ reduces to
+\begin{equation}
+  \label{eq:lax-burgers}
+  u_\ell > \frac{u_\ell+u_r}{2} > u_r
+  \quad \Longleftrightarrow \quad
+  u_\ell > u_r.
+\end{equation}
+
+\begin{remark}
+Condition \eqref{eq:lax-condition} says the characteristics on either side
+of the shock must run \emph{into} it as $t$ increases, rather than out of
+it: information is being destroyed at the shock (consistent with physical
+irreversibility), not created. This is the precise sense in which a shock
+differs from a rarefaction, where characteristics instead fan \emph{out}
+of a single point (Section~\ref{subsec:nonuniq-rarefaction}).
+\end{remark}
+
+\subsection{Application to the Riemann problem of Section~\ref{sec:nonuniqueness}}
+\label{subsec:entropy-application}
+
+\begin{proposition}
+\label{prop:entropy-selects-B}
+For the Riemann data \eqref{eq:riemann-data} ($u_\ell=0<u_r=1$), the
+shock solution $u_A$ of \eqref{eq:shock-solution} is not an entropy
+solution, while the rarefaction solution $u_B$ of
+\eqref{eq:rarefaction-solution} is.
+\end{proposition}
+
+\begin{proof}
+For $u_A$, condition \eqref{eq:lax-burgers} requires $u_\ell>u_r$, but
+here $u_\ell=0<1=u_r$, so \eqref{eq:lax-condition} fails: $u_A$ is not an
+entropy solution. The function $u_B$ contains no jump discontinuity at
+all (Proposition~\ref{prop:rarefaction-is-weak-solution} shows it is
+continuous), so Definition~\ref{def:lax-entropy} imposes no condition on
+it, and it is vacuously an entropy solution.
+\end{proof}
+
+Proposition~\ref{prop:entropy-selects-B} recovers, as a formal criterion,
+the physical judgement made informally at the end of
+Section~\ref{sec:nonuniqueness}: among the two weak solutions
+constructed there, the entropy condition selects exactly the rarefaction
+$u_B$ and rules out the backwards-running shock $u_A$.
+
+\subsection{Uniqueness}
+\label{subsec:entropy-uniqueness}
+
+The entropy condition is not merely a rule of thumb for discarding
+individual bad solutions: it in fact restores full well-posedness.
+
+\begin{theorem}[Oleinik, uniqueness of entropy solutions; see
+\cite{evans2010}, \S 3.4]
+\label{thm:oleinik-uniqueness}
+For $u_0 \in L^\infty(\mathbb{R})$ and $f$ uniformly convex, the initial
+value problem $u_t+f(u)_x=0$, $u(\cdot,0)=u_0$, has at most one entropy
+solution satisfying \eqref{eq:lax-condition} at every jump.
+\end{theorem}
+
+The proof of Theorem~\ref{thm:oleinik-uniqueness} (via an $L^1$-contraction
+argument comparing two entropy solutions) is beyond the scope of this
+paper and is not reproduced here; it is stated to record that the
+selection principle of Definition~\ref{def:lax-entropy} is exactly strong
+enough to recover uniqueness, and no stronger condition is needed.

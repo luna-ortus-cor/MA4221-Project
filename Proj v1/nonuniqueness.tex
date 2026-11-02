@@ -1,0 +1,115 @@
+\section{Non-Uniqueness of Weak Solutions}
+\label{sec:nonuniqueness}
+
+Definition~\ref{def:weak-solution} was introduced to admit discontinuous
+solutions past the shock time of Proposition~\ref{prop:shock-time}. This
+section shows that it admits \emph{too many}: a single initial condition
+can have more than one weak solution, so the weak formulation alone does
+not determine the evolution.
+
+\subsection{The Riemann problem}
+\label{subsec:nonuniq-setup}
+
+Consider \eqref{eq:ivp} with the specific piecewise-constant data
+\begin{equation}
+  \label{eq:riemann-data}
+  u_0(x) = \begin{cases} 0, & x < 0, \\ 1, & x > 0. \end{cases}
+\end{equation}
+This is the simplest instance of a \emph{Riemann problem}, and is studied
+in general in Section~\ref{sec:riemann-problem}. Since $u_0$ is
+increasing across $x=0$, the method of characteristics of
+Section~\ref{sec:characteristics} does not directly apply: characteristics
+emanate from $x_0<0$ with speed $0$ and from $x_0>0$ with speed $1$, so no
+characteristic covers the region $0<x<t$ at all. Two different weak
+solutions are constructed below, both consistent with this characteristic
+picture away from $0<x<t$.
+
+\subsection{A shock solution}
+\label{subsec:nonuniq-shock}
+
+Define
+\begin{equation}
+  \label{eq:shock-solution}
+  u_A(x,t) = \begin{cases} 0, & x < st, \\ 1, & x > st, \end{cases}
+  \qquad s = \frac{u_\ell+u_r}{2} = \frac{0+1}{2} = \frac12,
+\end{equation}
+where $s$ is chosen exactly to satisfy the Rankine--Hugoniot condition
+\eqref{eq:rankine-hugoniot-burgers} with $u_\ell=0$, $u_r=1$.
+
+\begin{proposition}
+\label{prop:shock-is-weak-solution}
+$u_A$ is a weak solution of \eqref{eq:ivp} with data \eqref{eq:riemann-data}.
+\end{proposition}
+
+\begin{proof}
+Away from the line $x=st$, $u_A$ is locally constant, hence $C^1$ and
+trivially satisfies $u_t+f(u)_x=0$. Along $x=st$, $u_A$ has a jump from
+$u_\ell=0$ to $u_r=1$ moving at exactly the Rankine--Hugoniot speed $s$.
+By Theorem~\ref{thm:rankine-hugoniot} (read in the direction verified in
+its proof: a piecewise $C^1$ function solving the PDE on each side and
+satisfying \eqref{eq:rankine-hugoniot} across the jump satisfies the weak
+formulation \eqref{eq:weak-formulation}), $u_A$ is a weak solution.
+\end{proof}
+
+\subsection{A rarefaction solution}
+\label{subsec:nonuniq-rarefaction}
+
+Define instead
+\begin{equation}
+  \label{eq:rarefaction-solution}
+  u_B(x,t) = \begin{cases}
+    0, & x \le 0, \\
+    x/t, & 0 < x < t, \\
+    1, & x \ge t.
+  \end{cases}
+\end{equation}
+
+\begin{proposition}
+\label{prop:rarefaction-is-weak-solution}
+$u_B$ is a weak solution of \eqref{eq:ivp} with data \eqref{eq:riemann-data}.
+\end{proposition}
+
+\begin{proof}
+On each of the three open regions $x<0$, $0<x<t$, and $x>t$, $u_B$ is
+$C^1$. On $0<x<t$, direct differentiation gives $(u_B)_t = -x/t^2$ and
+$(u_B)_x = 1/t$, so
+\begin{equation}
+  (u_B)_t + u_B (u_B)_x = -\frac{x}{t^2} + \frac{x}{t}\cdot\frac{1}{t} = 0,
+\end{equation}
+and the PDE holds classically on each piece. Moreover $u_B$ is
+\emph{continuous} across both boundary lines $x=0$ and $x=t$ (both one-
+sided limits equal $0$ at $x=0$ and $1$ at $x=t$), unlike $u_A$. Repeating
+the boundary computation in the proof of
+Theorem~\ref{thm:rankine-hugoniot} across each of these lines, the jump
+terms $f(u_\ell)-f(u_r) - s'(u_\ell - u_r)$ vanish identically because
+$u_\ell = u_r$ there (there is no jump to begin with, regardless of the
+line's speed $s'$). Hence all boundary contributions vanish and $u_B$
+satisfies \eqref{eq:weak-formulation}.
+\end{proof}
+
+\subsection{Two solutions, one initial condition}
+\label{subsec:nonuniq-conclusion}
+
+\begin{corollary}[Non-uniqueness]
+\label{cor:nonuniqueness}
+The initial value problem \eqref{eq:ivp} with data \eqref{eq:riemann-data}
+has at least two distinct weak solutions, $u_A$ and $u_B$.
+\end{corollary}
+
+This is a genuine failure of uniqueness, not merely a technicality: $u_A$
+and $u_B$ differ on the entire wedge $0<x<t$, and both are constructed
+from, and consistent with, the same tools developed so far ---
+$u_A$ from the Rankine--Hugoniot condition of
+Section~\ref{sec:weak-solutions}, and $u_B$ from a direct (if unmotivated)
+guess later justified by the general construction of
+Section~\ref{sec:riemann-problem}. Definition~\ref{def:weak-solution}
+alone gives no way to discard either one.
+
+\begin{remark}
+Physically, only $u_B$ is correct: for the fluid interpretation of
+Section~\ref{sec:motivation}, increasing data $u_\ell<u_r$ should
+disperse smoothly (a rarefaction), not jump discontinuously ($u_A$ is,
+in effect, a shock running \emph{backwards} in time).
+Section~\ref{sec:entropy-condition} makes this precise with a condition
+that $u_A$ fails and $u_B$ satisfies, restoring uniqueness.
+\end{remark}

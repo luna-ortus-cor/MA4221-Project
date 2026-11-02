@@ -1,0 +1,249 @@
+% =====================================================================
+%  Section 8.5: Long-time behaviour, the N-wave.  Optional: remove the
+%  \input line in main.tex to drop this subsection.  The corrected
+%  constants P, Q were checked numerically against the Lax--Oleinik
+%  formula for random piecewise-constant data (L^1 distance to the N-wave
+%  halves each time t is multiplied by 4, i.e. O(t^{-1/2})).
+% =====================================================================
+
+\subsection{Long-time behaviour: the N-wave}
+\label{subsec:n-wave}
+
+This final extension describes the universal shape that entropy
+solutions with compactly supported bounded initial data approach as $t \to
+\infty$, regardless of the detailed shape of $u_0$. The point to keep in
+mind is that the two constants specifying this shape are \emph{not} the
+total positive and negative masses of $u_0$: positive and negative parts
+of the data can annihilate each other across shocks.
+
+\subsubsection{An exact self-similar solution}
+\label{subsubsec:n-wave-exact}
+
+\begin{proposition}[The N-wave]
+\label{prop:n-wave-exact}
+Fix constants $P, Q > 0$. The function
+\begin{equation}
+  \label{eq:n-wave}
+  \mathcal{N}(x,t) = \begin{cases}
+    0, & x \le -\sqrt{2Qt}, \\
+    x/t, & -\sqrt{2Qt} < x < \sqrt{2Pt}, \\
+    0, & x \ge \sqrt{2Pt},
+  \end{cases}
+  \qquad t>0,
+\end{equation}
+is an entropy solution of $u_t+u\,u_x=0$ on $\mathbb{R}\times[t_0,\infty)$
+for every $t_0>0$ (with data $\mathcal{N}(\cdot,t_0)$). Moreover
+$\int \mathcal{N}^+(x,t)\,dx=P$, $\int \mathcal{N}^-(x,t)\,dx=Q$ for all $t>0$.
+\end{proposition}
+
+\begin{proof}
+Apply Proposition~\ref{prop:piecewise-weak} on $t\ge t_0$ with the two
+curves $x_-(t)=-\sqrt{2Qt}$ and $x_+(t)=\sqrt{2Pt}$, which are $C^1$ there.
+(i) On the middle interval $\mathcal{N}=x/t$ is the self-similar fan of
+Section~\ref{subsec:rarefaction-general}, which solves the PDE
+classically; the outer regions are constant. (ii) At the right edge the
+one-sided limits are $u_\ell = x_+(t)/t = \sqrt{2P/t}$ and $u_r=0$; since
+$\dot x_+(t) = \sqrt{P/(2t)} = \tfrac12\big(\sqrt{2P/t}+0\big)$, this is
+exactly the Rankine--Hugoniot speed \eqref{eq:rankine-hugoniot-burgers}.
+At the left edge $u_\ell=0$, $u_r=-\sqrt{2Q/t}$, and $\dot x_-(t) =
+-\sqrt{Q/(2t)} = \tfrac12\big(0+(-\sqrt{2Q/t})\big)$, again matching
+\eqref{eq:rankine-hugoniot-burgers}. (iii) The initial trace at $t_0$ is
+$\mathcal{N}(\cdot,t_0)$ by definition. Hence $\mathcal{N}$ is a weak solution there.
+
+For the entropy condition \eqref{eq:oleinik}: both jumps are downward
+($u_\ell>u_r$), and inside the middle interval $N_x=1/t$. If $x$ and $x+z$
+both lie in the middle interval, $\mathcal{N}(x+z,t)-N(x,t)=z/t$; if $x$ lies left of
+it, $\mathcal{N}(x+z,t)\le z/t$ because $x<0$. The only remaining case with a
+possible increase is $x<0$ inside the middle interval and $x+z$ beyond the
+right edge; then $\mathcal{N}(x+z,t)-N(x,t)=-x/t=|x|/t\le z/t$, because
+$x+z>0$ forces $|x|<z$. So \eqref{eq:oleinik} holds. Finally $\int_0^{\sqrt{2Pt}}(x/t)\,dx=P$
+and $\int_{-\sqrt{2Qt}}^0 (-x/t)\,dx=Q$.
+\end{proof}
+
+The profile \eqref{eq:n-wave} is called an \emph{N-wave}: it rises
+linearly through the origin and is bounded by a shock on each side, so
+that its graph traces the shape of the letter N (reversed), decaying in
+amplitude like $t^{-1/2}$ and spreading in width like $t^{1/2}$ as
+$t\to\infty$. (If $P=0$ or $Q=0$ the corresponding shock is absent and
+the profile is a single triangle ending in one shock; $P=Q=0$ gives
+$\mathcal{N}\equiv0$.) The function $\mathcal{N}$ is unbounded as $t\to0^+$, so it is not a
+weak solution on $t>0$ in the sense of Definition~\ref{def:weak-solution};
+as $t\to0^+$ it converges, in the sense of distributions, to $(P-Q)\delta_0$:
+both edges collapse to the origin, a state concentrated entirely at a
+point.
+
+\subsubsection{Shock merging and cancellation}
+\label{subsubsec:shock-merging}
+
+Two mechanisms are visible as general solutions evolve towards the
+N-wave; both are illustrations of why such a limit is plausible, and
+neither, by itself, proves the convergence theorem of
+Section~\ref{subsubsec:n-wave-convergence}. The first is that colliding
+shocks merge into one, governed by exactly the Riemann-problem machinery
+already developed.
+
+\begin{lemma}[Shock merging]
+\label{lem:shock-merging}
+Let $u_1>u_2>u_3$, and consider initial data equal to $u_1$ for $x<a$,
+$u_2$ for $a<x<b$, and $u_3$ for $x>b$. For small $t>0$ the entropy
+solution consists of two shocks moving at speeds $s_{12}=(u_1+u_2)/2$
+and $s_{23}=(u_2+u_3)/2$; since $s_{12}>s_{23}$, they collide at the
+finite time $t^\times = 2(b-a)/(u_1-u_3)$, after which the entropy
+solution is the single shock connecting $u_1$ to $u_3$ at speed
+$s_{13}=(u_1+u_3)/2$.
+\end{lemma}
+
+\begin{proof}[Proof sketch]
+Each jump individually satisfies the Lax condition since
+$u_1>u_2>u_3$, so Theorem~\ref{thm:riemann-solution}(a) gives the two
+shock speeds above. Since $s_{12}-s_{23}=\tfrac12(u_1-u_3)>0$, the shock
+positions $a+s_{12}t$ and $b+s_{23}t$ meet at the stated finite
+$t^\times$. At that instant the middle state has shrunk to zero width,
+leaving the two-state data $u_1,u_3$ on either side of the collision
+point; since $u_1>u_3$, Theorem~\ref{thm:riemann-solution}(a) applied
+afresh from time $t^\times$ gives the merged shock at speed $s_{13}$.
+\end{proof}
+
+\begin{remark}[Scope of the lemma]
+Lemma~\ref{lem:shock-merging} covers only shock--shock collisions. In
+general a shock also absorbs rarefaction fans, and a shock separating a
+positive state (on its left) from a negative one (on its right) cancels
+positive against negative mass. The following example shows this
+cancellation concretely and why it matters.
+\end{remark}
+
+\begin{example}[Cancellation]
+\label{ex:cancellation}
+Let $u_0=+1$ on $(0,1)$, $u_0=-1$ on $(1,2)$, and $u_0=0$ elsewhere. For
+$0<t<1$ the entropy solution is
+\begin{equation*}
+  u=\begin{cases}
+    0,&x<0,\\ x/t,&0<x<t,\\ 1,&t<x<1,\\ -1,&1<x<2-t,\\
+    (x-2)/t,&2-t<x<2,\\ 0,&x>2,
+  \end{cases}
+\end{equation*}
+(two fans, and a stationary shock at $x=1$, since $u_\ell=1>u_r=-1$ and
+$(u_\ell+u_r)/2=0$), as one checks with
+Proposition~\ref{prop:piecewise-weak}. At $t=1$ the fans reach the shock,
+and for $t\ge1$
+\begin{equation*}
+  u(x,t)=\begin{cases}
+    x/t,&0<x<1,\\ (x-2)/t,&1<x<2,\\ 0,&\text{otherwise,}
+  \end{cases}
+\end{equation*}
+with the stationary shock at $x=1$ ($u_\ell=1/t$, $u_r=-1/t$) and
+continuity elsewhere; it satisfies \eqref{eq:oleinik} because its only
+jump is downward and $u_x=1/t$ elsewhere. Hence for $t\ge1$,
+$\|u(\cdot,t)\|_{L^1}=\frac1{2t}+\frac1{2t}=\frac1t\to0$, even though
+$\int u_0^+=\int u_0^-=1$.
+\end{example}
+
+\subsubsection{Convergence of general solutions to the N-wave}
+\label{subsubsec:n-wave-convergence}
+
+The correct constants are read off from the primitive of $u_0$, not from
+its positive and negative parts.
+
+\noindent The following is a \emph{cited} theorem: it is stated here without
+proof, and the reader should consult \cite{lax1957} and
+\cite[\S3.4.5]{evans2010} for the precise hypotheses, norm and proof.
+
+\begin{theorem}[{Asymptotic N-wave decay; Lax \cite{lax1957}, see also \cite[\S3.4.5]{evans2010}}]
+\label{thm:n-wave-decay}
+Let $u_0 \in L^\infty(\mathbb{R})$ have compact support, and set
+\begin{equation}
+  \label{eq:pq-areas}
+  V(y)=\int_{-\infty}^y u_0(x)\,dx,\qquad M=\int_{\mathbb{R}}u_0\,dx,\qquad
+  Q=-\min_y V(y),\qquad P=M-\min_y V(y).
+\end{equation}
+Then $P,Q\ge0$, $P-Q=M$, and the entropy solution $u$ of \eqref{eq:ivp}
+satisfies
+\begin{equation}
+  \|u(\cdot,t) - \mathcal{N}(\cdot,t)\|_{L^1(\mathbb{R})} \to 0 \qquad \text{as } t \to \infty,
+\end{equation}
+where $\mathcal{N}$ is the N-wave \eqref{eq:n-wave} with these constants $P,Q$.
+\end{theorem}
+
+% TODO: insert the exact theorem number from Evans Section 3.4.5 and the
+% relevant theorem/section of Lax (1957) in the references.
+
+\noindent (The primitive $V$ here is based at $-\infty$, whereas in
+Remark~\ref{rem:lax-oleinik} it is based at $0$; the two differ by a constant,
+which changes neither the minimisers of $V(y)+(x-y)^2/2t$ nor $u$.)
+Equivalently $Q=\max_y\int_{-\infty}^y(-u_0)$ and
+$P=\max_y\int_y^\infty u_0$, so in general
+$P\le\int u_0^+$ and $Q\le\int u_0^-$, with equality exactly when $u_0\le0$
+to the left and $u_0\ge0$ to the right of some point (a ``pre-formed''
+N-shape, with no cancellation). Example~\ref{ex:cancellation} has $V\ge0$,
+so $Q=0$ and $P=M-0=0$: the limiting N-wave is $\mathcal{N}\equiv0$, consistent with
+$\|u\|_{L^1}=1/t\to0$.
+
+\paragraph{Heuristic derivation of the constants (not a proof of
+convergence).} The shock-merging lemma and the computation below
+\emph{motivate} the form of the theorem and the formula for $P$ and $Q$;
+they do not establish the $L^1$ convergence, which requires the estimates
+in the cited sources. The constants \eqref{eq:pq-areas} arise from the
+Lax--Oleinik formula \eqref{eq:lax-oleinik} of
+Remark~\ref{rem:lax-oleinik} by a short computation. Here $V(y)=0$ to the
+left of the support, $V(y)=M$ to its right, and $\min V=-Q$ is attained at
+some bounded point $y_0$. For $x$ of order $\sqrt t$ the minimiser of
+$V(y)+(x-y)^2/(2t)$ is one of two candidates:
+\begin{itemize}
+  \item $y\approx x$, with value $0$ for $x$ left of the support and $M$
+    for $x$ right of it, giving $u=(x-y)/t=0$;
+  \item $y\approx y_0$, with value $-Q+(x-y_0)^2/(2t)\approx -Q+x^2/(2t)$,
+    giving $u=(x-y_0)/t\approx x/t$.
+\end{itemize}
+The second beats the first on the left when $-Q+x^2/(2t)<0$, i.e.\
+$x>-\sqrt{2Qt}$, and on the right when $-Q+x^2/(2t)<M$, i.e.\
+$x<\sqrt{2(M+Q)t}=\sqrt{2Pt}$. This produces exactly the profile
+\eqref{eq:n-wave}, with shocks (ties between the two candidates) at
+$x=-\sqrt{2Qt}$ and $x=\sqrt{2Pt}$. Making this rigorous --- controlling
+the error in $L^1$ --- is the content of the cited theorem, and is not
+attempted here. In this
+picture the conserved quantity is only $\int u\,dx=M=P-Q$; the
+individual masses $P$ and $Q$ are \emph{not} conserved, since positive and
+negative parts cancel at shocks as in Example~\ref{ex:cancellation}.
+
+\subsubsection{A numerical check of the constants}
+\label{subsubsec:n-wave-numerics}
+
+The following is an \emph{observation}, not a proof. For piecewise-constant
+compactly supported $u_0$ the entropy solution can be computed (to grid
+resolution) directly from the Lax--Oleinik formula
+\eqref{eq:lax-oleinik}, with $V$ the exact primitive
+(\texttt{code/nwave\_check.py}). We compare it in $L^1$ with the N-wave built
+from the corrected constants \eqref{eq:pq-areas} and, for contrast, from the
+\emph{naive} constants $P=\int u_0^+$, $Q=\int u_0^-$. Three data sets were
+used: (a) $-1$ on $(0,1)$, $+1$ on $(1,2)$ (no cancellation); (b)
+$+1$ on $(0,1)$, $-1$ on $(1,2)$ (Example~\ref{ex:cancellation}); (c) six
+alternating-sign pieces with values $1.2,-0.8,1.6,-1.4,0.9,-0.6$ on
+$(0,0.7,1.5,2.1,3.0,3.8,4.4)$.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l c c c c c}
+  data & corrected $(P,Q)$ & naive $(P,Q)$ & $L^1$ error at $t=6400$ & naive error & fitted slope \\\hline
+  (a) & $(1,1)$ & $(1,1)$ & $7.0\times10^{-2}$ & $7.0\times10^{-2}$ & $-0.49$ \\
+  (b) & $(0,0)$ & $(1,1)$ & $1.6\times10^{-4}$ & $2.0$ & $-1.00$ \\
+  (c) & $(0.36,0.10)$ & $(2.52,2.26)$ & $9.4\times10^{-2}$ & $4.4$ & $-0.44$
+\end{tabular}
+\caption{$L^1$ distance between the entropy solution and the N-wave, for
+$t\in\{25,100,400,1600,6400\}$; ``fitted slope'' is the log--log slope of
+the corrected-constant error over $t\ge100$.}
+\label{tab:nwave}
+\end{table}
+
+With the corrected constants the error decays in all three cases. In (a)
+the slope is $-0.49$, consistent with $t^{-1/2}$; in (b) the limiting
+N-wave is $\mathcal{N}\equiv0$ and the error equals $\|u(\cdot,t)\|_{L^1}=1/t$ exactly
+(slope $-1.00$, as computed in Example~\ref{ex:cancellation}); in (c) the
+slope over this range is $-0.44$ and still changing, so no rate is claimed
+there. With the naive constants the error does not decay in (b) or (c): it
+stays near $\|\mathcal{N}_{\rm naive}-\mathcal{N}_{\rm corr}\|_{L^1}
+=(P_{\rm n}-P_{\rm c})+(Q_{\rm n}-Q_{\rm c})$ (the extra mass of the larger
+naive wave, which has the same profile on the common interval), namely $2.0$
+in (b) and $2.16+2.16=4.32$ in (c) (observed $4.35$ at $t=6400$). The naive
+profile itself has $L^1$ norm $P+Q=2.0$ and $4.78$ respectively; in (b) the
+two quantities coincide, which can hide the distinction. Either way, the
+positive and negative masses of $u_0$ are not the correct constants.

@@ -1,0 +1,56 @@
+\documentclass[10pt]{article}
+
+% ---------- Packages ----------
+\usepackage[margin=0.7in]{geometry}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{bm}
+\usepackage{tikz}
+
+% ---------- Reduce vertical space around display equations ----------
+\setlength{\abovedisplayskip}{2pt}
+\setlength{\belowdisplayskip}{2pt}
+\setlength{\abovedisplayshortskip}{2pt}
+\setlength{\belowdisplayshortskip}{2pt}
+\setlength{\jot}{2pt}
+
+% ---------- Tighten spacing in cases/array blocks ----------
+\renewcommand{\arraystretch}{0.8}
+
+% ---------- Theorem environments ----------
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+% ---------- Title ----------
+\title{Shocks, Weak Solutions, and Entropy: \\ An Exposition of Burgers' Equation}
+\author{Russell Ng (A0213913M) \\ MA4221 Partial Differential Equations}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+% ---------- Core exposition ----------
+\input{sections/background}     % Sections 1--3: motivation, characteristics, breakdown
+\input{sections/weak_theory}    % Sections 4--7: weak solutions, non-uniqueness, entropy, Riemann problem
+
+% ---------- Extensions (Section 8) ----------
+% Each extension is its own file so it can be cut with a single line.
+\input{sections/extensions}     % 8.1--8.3: Cole--Hopf, vanishing viscosity (opens Section 8)
+\input{sections/ext_godunov}    % 8.4: Godunov's method
+
+\input{sections/conclusion}
+
+\bibliographystyle{plain}
+\bibliography{references}
+
+\end{document}

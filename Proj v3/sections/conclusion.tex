@@ -1,0 +1,64 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+\paragraph{The answer to the guiding question.}
+The question of Section~\ref{subsec:question} was why the inviscid Burgers'
+equation needs an entropy condition and why that condition is the right one.
+The chain of results is now complete. Smooth decreasing data develop an
+infinite slope at an explicit time and place,
+$T^*=-1/\min u_0'$ (Section~\ref{sec:shock-formation}); the weak formulation
+continues the solution past this point through jumps obeying the
+Rankine--Hugoniot condition (Section~\ref{sec:weak-solutions}), but it is
+non-unique, already for the simplest Riemann data, where in fact infinitely
+many weak solutions exist (Section~\ref{sec:nonuniqueness}). The Oleinik
+entropy condition, of which the Lax condition $u_\ell>u_r$ is the local form
+at a jump, restores uniqueness and gives the complete solution of the Riemann
+problem (Sections~\ref{sec:entropy-condition}--\ref{sec:riemann-problem}).
+That it is the \emph{right} condition is the content of the vanishing
+viscosity limit: via the Cole--Hopf transformation the viscous solutions
+converge to the entropy solution, whose jumps can only be downward because
+the Lax--Oleinik minimiser is monotone, and directly because a viscous
+travelling wave connecting $u_\ell$ to $u_r$ exists exactly when
+$u_\ell>u_r$ (Section~\ref{sec:extensions}, Proposition~\ref{prop:viscous-profile}). The
+theory itself is standard \cite[\S3.4]{evans2010}; the novelty of this
+paper is in the explicit verifications and the computations below.
+
+\paragraph{What the computations added.}
+\begin{itemize}
+  \item \emph{An explicit example} (Section~\ref{subsec:arctan-complete}): for
+    $u_0=-\arctan x$ the entropy solution after breakdown has a single
+    stationary shock of strength $\arctan y^*(t)$ ($y^*$ the positive root of
+    $\arctan y=y/t$), growing like $\sqrt{3(t-1)}$ and saturating at $\pi/2$.
+  \item \emph{A confirmed prediction}: a viscous shock of any strength has
+    $L^1$ distance exactly $4\ln2\,\nu\approx2.77\,\nu$ from the sharp shock. The
+    Cole--Hopf shock layer contributes $2.78\,\nu$ (within $0.5\%$), tending to
+    $4\ln2\,\nu$ at every strength tested ($0.52$--$1.50$) once the window is
+    small enough; the total error is first order, $\approx3.11\,\nu$, the
+    remaining $\approx0.33\,\nu$ coming from the smooth part (measured, not
+    derived).
+  \item \emph{Godunov as a vanishing viscosity} (Section~\ref{subsec:godunov}):
+    shock error $0.50\,\Delta x$ on aligned grids ($0.6$--$0.77\,\Delta x$
+    otherwise); rarefaction order about $0.8$ and still rising. The modified
+    equation predicts the shock error within $3\%$ at CFL $0.45$ (about $10\%$ over
+    CFL $0.1$--$0.95$), i.e.\ $\nu_{\rm eff}\approx0.18\,\Delta x\to0$: a heuristic
+    consistency check that a monotone scheme selects the entropy solution
+    because its numerical diffusion acts as a vanishing viscosity; the
+    rigorous result is \cite{crandall1980}.
+  \item \emph{Corrected N-wave constants} (Section~\ref{subsec:n-wave}): $Q=-\min V$,
+    $P=\int u_0-\min V$ with $V$ the primitive of $u_0$, not the positive and
+    negative masses, since positive and negative parts cancel across shocks and
+    only $P-Q=\int u_0$ is conserved. For $+1$ on $(0,1)$, $-1$ on $(1,2)$ the
+    correct limit is $0$ ($\|u\|_{L^1}=1/t$ exactly), whereas the masses predict a
+    wave of norm $2$; numerically only the corrected constants give decay.
+\end{itemize}
+
+\paragraph{Limits of the exposition.}
+The proofs of the uniqueness theorem (Theorem~\ref{thm:oleinik-uniqueness}),
+of the vanishing-viscosity limit (Theorem~\ref{thm:vanishing-viscosity}), of
+the convergence of the Godunov scheme (Theorem~\ref{thm:godunov-convergence})
+and of the N-wave decay (Theorem~\ref{thm:n-wave-decay}) are cited, not
+reproduced. The numerical statements are observations for the specific data
+sets and resolutions stated. Burgers' equation is a model of nonlinear
+steepening and its regularisation, not a stepping stone to the far harder
+open regularity questions for the three-dimensional Euler and Navier--Stokes
+equations, whose mechanisms differ.

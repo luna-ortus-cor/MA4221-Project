@@ -1,0 +1,93 @@
+\section{Shock Formation}
+\label{sec:shock-formation}
+
+This section computes the exact time and location at which the
+classical solution of Section~\ref{sec:characteristics} first breaks
+down.
+
+\subsection{Blow-up of the derivative}
+\label{subsec:shock-derivative-blowup}
+
+From the proof of Theorem~\ref{thm:implicit-solution},
+\begin{equation}
+  \label{eq:ux-formula}
+  u_x(x,t) = \frac{u_0'(x_0)}{1 + u_0'(x_0)\, t}, \qquad x = x_0 + u_0(x_0)\, t.
+\end{equation}
+If $u_0'(x_0) \geq 0$, the denominator stays $\geq 1$ and $u_x$ remains
+bounded along that characteristic for all $t\geq0$. If $u_0'(x_0) < 0$,
+the denominator vanishes at the finite time $t = -1/u_0'(x_0)$, where
+\eqref{eq:ux-formula} shows $|u_x| \to \infty$: the solution value stays
+bounded, but its slope becomes vertical.
+
+\subsection{The envelope of the characteristics}
+\label{subsec:envelope}
+
+The characteristics form a one-parameter family of lines
+\begin{equation}
+  \label{eq:char-family}
+  x(x_0, t) = x_0 + u_0(x_0)\, t, \qquad x_0 \in \mathbb{R}.
+\end{equation}
+The first global breakdown occurs where neighbouring characteristics meet
+soonest, i.e. on the envelope of this family, found by solving
+\eqref{eq:char-family} together with $\partial x/\partial x_0 = 0$:
+\begin{equation}
+  \label{eq:envelope-condition}
+  1 + u_0'(x_0)\, t = 0.
+\end{equation}
+This is exactly the vanishing of $\Phi_t'(x_0)$, so the envelope
+condition coincides with the derivative blow-up condition above.
+
+\subsection{The shock formation time}
+\label{subsec:shock-time}
+
+\begin{proposition}[Shock formation time]
+\label{prop:shock-time}
+Let $u_0 \in C^1(\mathbb{R})$ with $m := \min_{x_0} u_0'(x_0) < 0$,
+attained at $x_0 = a$. Then the classical solution exists and is $C^1$ on
+$\mathbb{R} \times [0,T^*)$ for
+\begin{equation}
+  \label{eq:shock-time}
+  T^* = \frac{-1}{m},
+\end{equation}
+and fails to extend as a single-valued $C^1$ function beyond $T^*$. The
+first breakdown occurs at
+\begin{equation}
+  \label{eq:shock-location}
+  x^* = a + u_0(a)\, T^*, \qquad t^* = T^*.
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Since $s \mapsto -1/s$ is strictly increasing on $(-\infty,0)$ and
+$u_0'(x_0) \geq m$ everywhere, $-1/u_0'(x_0) \geq -1/m = T^*$ for every
+$x_0$ with $u_0'(x_0)<0$, with equality only at $x_0=a$. So $T^*$ is the
+smallest time at which any characteristic meets a neighbour:
+$\Phi_t'(x_0)>0$ for all $x_0$ throughout $[0,T^*)$, giving a classical
+solution there by Theorem~\ref{thm:implicit-solution}, while
+$\Phi_{T^*}'(a)=0$ makes $\Phi_{T^*}$ fail to be locally invertible at
+$a$, so $u_x$ is unbounded near $(x^*,t^*)$ by \eqref{eq:ux-formula}.
+Substituting $x_0=a$, $t=T^*$ into \eqref{eq:char-family} gives $x^*$.
+\end{proof}
+
+\subsection{Worked example, continued}
+\label{subsec:shock-example}
+
+For $u_0(x) = -\arctan(x)$, $u_0'(x_0) = -1/(1+x_0^2)$ is minimised at
+$a=0$ with $m=-1$, so Proposition~\ref{prop:shock-time} gives $T^*=1$,
+matching Section~\ref{subsec:char-example}. The shock location is
+\begin{equation}
+  x^* = 0 + (-\arctan(0))\cdot 1 = 0,
+\end{equation}
+so the singularity first appears at $(x^*,t^*) = (0,1)$, matching
+Figure~\ref{fig:characteristics}.
+
+\subsection{From breakdown to weak solutions}
+\label{subsec:shock-transition}
+
+Proposition~\ref{prop:shock-time} shows the classical formulation of
+\eqref{eq:ivp} cannot describe decreasing initial data beyond $T^*$, even
+though nothing in the underlying physics suggests the evolution should
+stop. Section~\ref{sec:weak-solutions} resolves this by weakening the
+notion of solution: rather than requiring $u_t+u\,u_x=0$ pointwise, $u$
+need only satisfy an integral identity against smooth test functions,
+which admits discontinuous solutions for all $t \geq 0$.

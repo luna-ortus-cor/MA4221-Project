@@ -1,0 +1,51 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper has given a complete account of Burgers' equation, from its
+origin as a simplified model of nonlinear advection and viscous diffusion
+(Section~\ref{sec:motivation}) to the theory required to solve it once
+classical solutions cease to exist. The method of characteristics
+(Section~\ref{sec:characteristics}) gives an explicit solution formula
+that is exact but necessarily temporary: Section~\ref{sec:shock-formation}
+showed that decreasing initial data produces a genuine, finite-time loss
+of smoothness, with an exact formula for the time and location of the
+first singularity. Making sense of the equation beyond this point
+required weakening the notion of solution
+(Section~\ref{sec:weak-solutions}), which in turn revealed a genuine
+failure of uniqueness (Section~\ref{sec:nonuniqueness}): the same initial
+data can evolve into more than one weak solution. The Lax entropy
+condition (Section~\ref{sec:entropy-condition}) was introduced precisely
+to resolve this, and Section~\ref{sec:riemann-problem} used it to give
+the complete, explicit entropy solution of the Riemann problem in both
+possible cases.
+
+The extensions in Section~\ref{sec:extensions} showed that this core
+theory extends well beyond the specific flux $u^2/2$. The Cole--Hopf
+transformation justified the entropy condition itself, as the selection
+principle recovered in the vanishing-viscosity limit rather than an
+arbitrary rule, and showed that viscosity alone, without the
+vortex-stretching mechanism absent from this one-dimensional model, is
+enough to guarantee global smoothness ---
+supporting Remark~\ref{rem:navier-stokes-relevance}. The general convex
+flux extension confirmed none of the core results are special to
+Burgers' particular flux. The Godunov scheme, built directly on the
+exact Riemann solver derived here, reproduced the analytic shock speed
+and rarefaction profile numerically to within first-order error. The
+shock interaction result showed multiple shocks merge via the same
+Riemann-problem mechanism used throughout, the damped equation showed
+this mechanism can be delayed or prevented by sufficiently strong linear
+dissipation, and the N-wave result showed that the long-time behaviour of
+any compactly supported solution is governed by a single universal
+profile, determined only by the total positive and negative area of the
+initial data.
+
+Taken together, these results illustrate why Burgers' equation, despite
+its simplicity, remains a standard reference point in the theory of
+nonlinear partial differential equations: it is simple enough to solve
+exactly and completely, in every regime considered here, while already
+exhibiting the central phenomena --- shock formation, non-uniqueness of
+weak solutions, the necessity of an entropy condition, and the
+regularising effect of viscosity --- that make the general theory of
+nonlinear conservation laws, and by extension the far harder open
+questions surrounding the Navier--Stokes and Euler equations, so
+difficult to resolve.

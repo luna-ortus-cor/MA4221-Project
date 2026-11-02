@@ -1,0 +1,126 @@
+\section{Weak Solutions and the Integral Form}
+\label{sec:weak-solutions}
+
+Since classical solutions of \eqref{eq:ivp} cannot be extended past the
+shock time $T^*$ of Proposition~\ref{prop:shock-time}, this section
+introduces a weaker notion of solution that admits discontinuities, and
+derives the condition such discontinuities must satisfy.
+
+\subsection{The integral formulation}
+\label{subsec:integral-form}
+
+Let $u$ be a $C^1$ solution of $u_t + f(u)_x = 0$ on $\mathbb{R} \times
+(0,\infty)$ with $f(u)=u^2/2$, and let $\varphi \in C_c^1(\mathbb{R}
+\times [0,\infty))$ be any test function, compactly supported but not
+required to vanish at $t=0$. Multiplying the PDE by $\varphi$, integrating
+over $\mathbb{R}\times(0,\infty)$, and integrating by parts in both $x$
+and $t$ (using that $\varphi$ has compact support, so all boundary terms
+at spatial infinity vanish) gives
+\begin{equation}
+  \label{eq:weak-derivation}
+  0 = \int_0^\infty\!\!\int_{\mathbb{R}} \big(u_t + f(u)_x\big)\varphi\, dx\, dt
+  = -\int_0^\infty\!\!\int_{\mathbb{R}} \big(u\,\varphi_t + f(u)\,\varphi_x\big)\, dx\, dt
+  - \int_{\mathbb{R}} u_0(x)\, \varphi(x,0)\, dx,
+\end{equation}
+where the boundary term at $t=0$ survives because $\varphi(x,0)$ need not
+vanish. Equation \eqref{eq:weak-derivation} makes sense whenever $u \in
+L^\infty$, with no differentiability required of $u$ at all: this
+motivates the following definition.
+
+\begin{definition}[Weak solution]
+\label{def:weak-solution}
+A function $u \in L^\infty(\mathbb{R}\times(0,\infty))$ is a \emph{weak
+solution} of \eqref{eq:ivp} if
+\begin{equation}
+  \label{eq:weak-formulation}
+  \int_0^\infty\!\!\int_{\mathbb{R}} \big(u\,\varphi_t + f(u)\,\varphi_x\big)\, dx\, dt
+  + \int_{\mathbb{R}} u_0(x)\, \varphi(x,0)\, dx = 0
+\end{equation}
+for every $\varphi \in C_c^1(\mathbb{R}\times[0,\infty))$.
+\end{definition}
+
+\subsection{Consistency with classical solutions}
+\label{subsec:weak-consistency}
+
+\begin{proposition}[Consistency]
+\label{prop:weak-consistency}
+If $u \in C^1(\mathbb{R}\times[0,\infty))$ satisfies \eqref{eq:ivp}
+classically, it is a weak solution. Conversely, if a weak solution $u$
+happens to lie in $C^1(\mathbb{R}\times[0,\infty))$, it satisfies
+\eqref{eq:ivp} classically.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+The first claim is precisely the computation in
+\eqref{eq:weak-derivation}, read in reverse. For the converse, reversing
+the integration by parts shows a $C^1$ weak solution satisfies
+$\int (u_t+f(u)_x)\varphi + \int (u(x,0)-u_0(x))\varphi(x,0) = 0$ for
+every $\varphi\in C_c^1$; taking $\varphi$ supported away from $t=0$
+forces $u_t+f(u)_x=0$ pointwise by the fundamental lemma of the calculus
+of variations, and taking $\varphi(\cdot,0)$ arbitrary then forces
+$u(x,0)=u_0(x)$.
+\end{proof}
+
+\subsection{The Rankine--Hugoniot condition}
+\label{subsec:rankine-hugoniot}
+
+The purpose of Definition~\ref{def:weak-solution} is to admit solutions
+with jump discontinuities. The next result identifies exactly what
+constraint such a jump must satisfy.
+
+\begin{theorem}[Rankine--Hugoniot condition]
+\label{thm:rankine-hugoniot}
+Let $s : [0,\infty) \to \mathbb{R}$ be $C^1$, and suppose $u$ is a weak
+solution of \eqref{eq:ivp} that is $C^1$ on each side of the curve
+$x=s(t)$, with one-sided limits
+\begin{equation}
+  u_\ell(t) = \lim_{x \to s(t)^-} u(x,t), \qquad u_r(t) = \lim_{x \to s(t)^+} u(x,t)
+\end{equation}
+existing and $u_\ell(t) \neq u_r(t)$. Then $u$ satisfies $u_t+f(u)_x=0$
+classically away from the curve, and along the curve
+\begin{equation}
+  \label{eq:rankine-hugoniot}
+  s'(t) = \frac{f(u_\ell(t)) - f(u_r(t))}{u_\ell(t) - u_r(t)}.
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Fix $\varphi \in C_c^1(\mathbb{R}\times(0,\infty))$ supported in a region
+crossed by the curve $x=s(t)$, and split the domain of integration in
+\eqref{eq:weak-formulation} into $\Omega_\ell = \{x<s(t)\}$ and
+$\Omega_r=\{x>s(t)\}$, on each of which $u$ is $C^1$. On each piece,
+integrate by parts in the reverse direction to
+\eqref{eq:weak-derivation}, which is valid since $u$ is $C^1$ there; this
+produces the interior term $\iint (u_t+f(u)_x)\varphi$ (which vanishes if
+$u$ solves the PDE classically away from the curve, established by the
+same interior argument as in Proposition~\ref{prop:weak-consistency}
+applied to test functions supported in $\Omega_\ell$ or $\Omega_r$ alone)
+plus a boundary term along $x=s(t)$ from each side. Since the outward
+unit normal to $\Omega_\ell$ along the curve is proportional to $(1,
+-s'(t))$ (and to $(-1,s'(t))$ for $\Omega_r$), these boundary
+contributions combine to give
+\begin{equation}
+  \int_0^\infty \Big[ \big(f(u_\ell(t)) - f(u_r(t))\big) - s'(t)\big(u_\ell(t)-u_r(t)\big) \Big] \varphi(s(t),t)\, dt = 0.
+\end{equation}
+Since $\varphi(s(t),t)$ is an arbitrary $C^1$ function of $t$ along the
+curve, the bracketed term must vanish identically, which is
+\eqref{eq:rankine-hugoniot}.
+\end{proof}
+
+For Burgers' flux $f(u)=u^2/2$, \eqref{eq:rankine-hugoniot} simplifies
+using $f(u_\ell)-f(u_r) = \tfrac12(u_\ell-u_r)(u_\ell+u_r)$ to the
+familiar average-speed formula
+\begin{equation}
+  \label{eq:rankine-hugoniot-burgers}
+  s'(t) = \frac{u_\ell(t) + u_r(t)}{2}.
+\end{equation}
+
+\begin{remark}
+Equation \eqref{eq:rankine-hugoniot-burgers} already appears implicitly
+in Section~\ref{sec:shock-formation}: at the moment of first breakdown,
+the emerging discontinuity moves at the average of the characteristic
+speeds $u_\ell$ and $u_r$ arriving from either side, consistent with the
+characteristic picture of Figure~\ref{fig:characteristics}.
+Section~\ref{sec:riemann-problem} uses \eqref{eq:rankine-hugoniot-burgers}
+to construct explicit shock solutions.
+\end{remark}

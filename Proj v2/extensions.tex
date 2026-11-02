@@ -1,0 +1,249 @@
+% =====================================================================
+%  Section 8 (opening) and 8.1--8.3: Cole--Hopf, exact solution,
+%  vanishing viscosity.  8.4 and 8.5 are in ext_godunov.tex and
+%  ext_nwave.tex and can be removed independently from main.tex.
+% =====================================================================
+
+\section{Extensions}
+\label{sec:extensions}
+
+The core theory (Sections~\ref{sec:characteristics}--\ref{sec:riemann-problem})
+is complete without this section. Subsections~\ref{subsec:cole-hopf}--%
+\ref{subsec:vanishing-viscosity} reintroduce viscosity and connect the
+viscous and inviscid theories;
+Subsection~\ref{subsec:arctan-complete} completes the worked example of
+Sections~\ref{sec:characteristics}--\ref{sec:shock-formation} using them;
+Subsections~\ref{subsec:godunov} and \ref{subsec:n-wave} are self-contained
+applications of the Riemann solver and of the entropy theory.
+
+\subsection{The Cole--Hopf transformation}
+\label{subsec:cole-hopf}
+
+(Due to Cole \cite{cole1951} and Hopf \cite{hopf1950}.)
+
+This extension solves the viscous Burgers' equation
+\eqref{eq:viscous-burgers} exactly by linearising it to the heat equation.
+The key observation is that, in one dimension, any $u$ is the
+$x$-derivative of a potential, namely $-2\nu\,\partial_x$ of a logarithm.
+
+\begin{theorem}[Cole--Hopf transformation]
+\label{thm:cole-hopf}
+Let $u$ be a classical solution of $u_t+u\,u_x=\nu\,u_{xx}$ on
+$\mathbb{R}\times[0,T)$, and set
+\begin{equation}
+  \label{eq:cole-hopf-def}
+  \hat\psi(x,t)=-\frac{1}{2\nu}\int_0^x u(y,t)\,dy,
+  \qquad
+  c(t)=\int_0^t\Big(\frac{u(0,\tau)^2}{4\nu}-\frac{u_x(0,\tau)}{2}\Big)d\tau,
+  \qquad
+  \theta(x,t)=\exp\big(\hat\psi(x,t)+c(t)\big)>0 .
+\end{equation}
+Then $\theta$ solves the heat equation $\theta_t=\nu\,\theta_{xx}$, and
+$u=-2\nu\,\theta_x/\theta$.
+\end{theorem}
+
+\begin{proof}
+The identity $u=-2\nu\theta_x/\theta$ is immediate: $\theta_x/\theta=
+\hat\psi_x=-u/(2\nu)$, since $c$ depends on $t$ only. For the heat
+equation, let $w=\hat\psi_t-\nu\hat\psi_{xx}-\nu\hat\psi_x^2$. Using
+$\hat\psi_x=-u/(2\nu)$, $\hat\psi_{xx}=-u_x/(2\nu)$,
+$\hat\psi_{xt}=-u_t/(2\nu)$ and $\hat\psi_{xxx}=-u_{xx}/(2\nu)$,
+\begin{equation}
+  w_x=\hat\psi_{xt}-\nu\hat\psi_{xxx}-2\nu\hat\psi_x\hat\psi_{xx}
+  =-\frac{1}{2\nu}\big(u_t+u\,u_x-\nu\,u_{xx}\big)=0 .
+\end{equation}
+So $w$ is a function of $t$ alone, and may be evaluated at $x=0$, where
+$\hat\psi(0,t)=0$ gives $\hat\psi_t(0,t)=0$; hence
+\begin{equation}
+  w(t)=w(0,t)=\frac{u_x(0,t)}{2}-\frac{u(0,t)^2}{4\nu}=:C(t).
+\end{equation}
+Put $\psi=\hat\psi+c$, so $c'=-C$ and $\psi_t-\nu\psi_{xx}-\nu\psi_x^2=
+C+c'=0$. Since $\theta=e^{\psi}$ gives $\theta_t=\theta\psi_t$ and
+$\theta_{xx}=\theta(\psi_{xx}+\psi_x^2)$, this is $\theta_t=\nu\theta_{xx}$.
+\end{proof}
+
+\begin{remark}
+The correction $c(t)$ cannot be omitted in general. The naive function
+$e^{\hat\psi}=\exp\big(-\tfrac1{2\nu}\int_0^x u\,dy\big)$, normalised to
+equal $1$ at $x=0$, satisfies $\partial_t\theta=\nu\theta_{xx}+C(t)\theta$,
+which is the heat equation only if $C\equiv0$. The factor $e^{c(t)}$ is
+independent of $x$, so it changes neither $u=-2\nu\theta_x/\theta$ nor the
+initial data ($c(0)=0$).
+\end{remark}
+
+\subsection{Exact solution via the heat kernel}
+\label{subsec:cole-hopf-solution}
+
+By Theorem~\ref{thm:cole-hopf}, solving \eqref{eq:viscous-burgers} reduces
+to solving the heat equation for $\theta$ with initial data
+\begin{equation}
+  \label{eq:theta0}
+  \theta_0(x) = \exp\left(-\frac{1}{2\nu}\int_0^x u_0(y)\, dy\right),
+\end{equation}
+which, for bounded $u_0$, grows at most like $e^{\|u_0\|_\infty|x|/(2\nu)}$.
+The Cauchy problem for the heat equation has a unique solution in this
+growth class (see \cite[\S2.3.3]{evans2010}), given by convolution with
+the heat kernel,
+\begin{equation}
+  \label{eq:theta-heat-kernel}
+  \theta(x,t) = \int_{\mathbb{R}} \frac{1}{\sqrt{4\pi\nu t}}\,
+    \exp\left(-\frac{(x-y)^2}{4\nu t}\right) \theta_0(y)\, dy.
+\end{equation}
+Substituting \eqref{eq:theta0}--\eqref{eq:theta-heat-kernel} into
+$u=-2\nu\,\theta_x/\theta$ and differentiating under the integral gives
+the explicit \emph{Cole--Hopf formula}
+\begin{equation}
+  \label{eq:cole-hopf-formula}
+  u(x,t) = \frac{\displaystyle\int_{\mathbb{R}} \frac{x-y}{t}\, \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy}
+                {\displaystyle\int_{\mathbb{R}} \exp\left(-\frac{G(x,y,t)}{2\nu}\right) dy},
+  \qquad
+  G(x,y,t) = \int_0^y u_0(s)\, ds + \frac{(x-y)^2}{2t}.
+\end{equation}
+
+\begin{corollary}[Global smoothness; Hopf \cite{hopf1950}]
+\label{cor:global-smoothness}
+For every bounded measurable $u_0$ and every $\nu>0$, formula
+\eqref{eq:cole-hopf-formula} defines a solution of
+\eqref{eq:viscous-burgers} that is $C^\infty$ for all $t>0$; it is the
+unique bounded solution with data $u_0$.
+\end{corollary}
+
+\noindent That \eqref{eq:cole-hopf-formula} solves the equation follows by
+reversing the computation of Theorem~\ref{thm:cole-hopf}: if $\theta>0$
+solves the heat equation, then $u=-2\nu\theta_x/\theta$ solves
+\eqref{eq:viscous-burgers}, and $\theta$ given by
+\eqref{eq:theta-heat-kernel} is smooth and positive for $t>0$. The
+statement that the initial data are attained and that the bounded
+solution is unique for merely measurable $u_0$ is due to Hopf
+\cite{hopf1950}; it is cited, not reproved here.
+
+Unlike the inviscid equation (Proposition~\ref{prop:shock-time}),
+solutions of \eqref{eq:viscous-burgers} stay smooth for all time, for
+any $\nu>0$ however small: advection and viscous diffusion together do
+not by themselves produce singularities. This is a statement about Burgers' equation, not about
+Navier--Stokes: Burgers' scalar, one-dimensional structure (it obeys a
+maximum principle and has no pressure or vortex stretching) means that its
+regularisation mechanism is quite different from the open regularity
+question in three dimensions.
+
+\subsection{The vanishing viscosity limit}
+\label{subsec:vanishing-viscosity}
+
+The Cole--Hopf solution also explains why the entropy conditions of
+Section~\ref{sec:entropy-condition} are the physically correct selection
+principle, rather than an arbitrary one.
+
+\begin{theorem}[Vanishing viscosity limit; Hopf, 1950]
+\label{thm:vanishing-viscosity}
+Let $u_0\in L^\infty(\mathbb{R})$, let $u^\nu$ denote the solution of
+\eqref{eq:viscous-burgers} with data $u_0$ given by
+\eqref{eq:cole-hopf-formula}, and let $u$ denote the entropy solution of
+\eqref{eq:inviscid-burgers} with the same data, in the sense of
+Definition~\ref{def:entropy-solution} (for Riemann data this is
+Theorem~\ref{thm:riemann-solution}). Then $u^\nu \to u$ pointwise almost
+everywhere, and in $L^1_{\mathrm{loc}}$, as $\nu \to 0^+$ \cite{hopf1950}.
+\end{theorem}
+
+The proof is a Laplace-method asymptotic analysis of
+\eqref{eq:cole-hopf-formula} as $\nu\to0$, and is not reproduced here. Its
+mechanism, however, is worth recording, because it is used again in
+Section~\ref{subsec:n-wave}.
+
+\begin{remark}[The Lax--Oleinik formula]
+\label{rem:lax-oleinik}
+As $\nu\to0$ the weight $\exp(-G/2\nu)$ in
+\eqref{eq:cole-hopf-formula} concentrates at the minimisers of
+$y\mapsto G(x,y,t)$. At every $(x,t)$ where the minimiser
+$y^*(x,t)$ is unique, the limit is
+\begin{equation}
+  \label{eq:lax-oleinik}
+  u(x,t)=\frac{x-y^*(x,t)}{t},\qquad
+  y^*(x,t)=\operatorname*{arg\,min}_y\Big\{V(y)+\frac{(x-y)^2}{2t}\Big\},
+  \quad V(y)=\int_0^y u_0 ,
+\end{equation}
+the \emph{Lax--Oleinik formula} \cite{lax1957,oleinik1957}, \cite[\S3.4.2]{evans2010}. A jump occurs
+where two minimisers $y_1<y_2$ tie, with $u_\ell=(x-y_1)/t>u_r=(x-y_2)/t$:
+the viscous limit produces only \emph{downward} jumps, which is exactly
+the content of the Lax condition \eqref{eq:lax-burgers}. More
+generally, $x\mapsto y^*(x,t)$ is nondecreasing (a standard property of the
+minimiser, \cite[\S3.4.2]{evans2010}), so for $z>0$
+\begin{equation*}
+  u(x+z,t)-u(x,t)=\frac{z-\big(y^*(x+z,t)-y^*(x,t)\big)}{t}\ \le\ \frac zt,
+\end{equation*}
+which is the sharp Oleinik bound \eqref{eq:oleinik}. Together with the fact
+that \eqref{eq:lax-oleinik} defines a weak solution
+\cite[\S3.4.2]{evans2010}, this shows that the Lax--Oleinik solution is an
+entropy solution in the sense of Definition~\ref{def:entropy-solution}. Thus the
+entropy condition is not an ad hoc rule imposed to force uniqueness, but
+the criterion selected by the physically natural limit of vanishing
+viscosity --- the same limit by which the inviscid equation
+\eqref{eq:inviscid-burgers} was justified as an idealisation of
+\eqref{eq:viscous-burgers} in Section~\ref{sec:motivation}.
+\end{remark}
+
+\subsubsection{Viscous shock profiles and the Lax condition}
+\label{subsubsec:viscous-profiles}
+
+The vanishing-viscosity picture can be made quite explicit at a single jump.
+It also shows directly that the Lax condition is not an arbitrary rule.
+
+\begin{proposition}[Viscous shock profiles]
+\label{prop:viscous-profile}
+Let $u_\ell\neq u_r$ and $\nu>0$. The viscous Burgers' equation
+\eqref{eq:viscous-burgers} has a travelling-wave solution $u(x,t)=\phi(x-st)$,
+with $\phi\in C^2$ bounded and $\phi(\xi)\to u_\ell$, $\phi(\xi)\to u_r$ as
+$\xi\to-\infty$, $+\infty$ (and $\phi'\to0$), \emph{if and only if}
+$u_\ell>u_r$. In that case $s=(u_\ell+u_r)/2$ and, with $\Delta=u_\ell-u_r$,
+\begin{equation}
+  \label{eq:viscous-profile}
+  \phi(\xi)=s-\frac{\Delta}{2}\tanh\!\Big(\frac{\Delta\,\xi}{4\nu}\Big).
+\end{equation}
+Moreover $\|\phi-(s-\tfrac\Delta2\operatorname{sgn}\xi)\|_{L^1(\mathbb{R})}
+=4\ln2\;\nu$, independent of $s$ and $\Delta$.
+\end{proposition}
+
+\begin{proof}
+Substituting $u=\phi(x-st)$ gives $-s\phi'+\phi\phi'=\nu\phi''$, and
+integrating once from $-\infty$ (where $\phi'\to0$),
+\begin{equation*}
+  \nu\phi'=\tfrac12\phi^2-s\phi-C,\qquad C=\tfrac12u_\ell^2-su_\ell .
+\end{equation*}
+Letting $\xi\to+\infty$ shows the right-hand side must also vanish at $u_r$,
+so $u_\ell,u_r$ are the two roots of the quadratic: $s=(u_\ell+u_r)/2$
+(the Rankine--Hugoniot speed) and
+\begin{equation}
+  \label{eq:profile-ode}
+  \nu\phi'=\tfrac12(\phi-u_\ell)(\phi-u_r).
+\end{equation}
+This is a first-order autonomous ODE, so $\phi$ cannot cross the equilibria
+$u_\ell,u_r$ and, to connect them, must lie strictly between them. If
+$u_\ell<u_r$, then for $\phi\in(u_\ell,u_r)$ the right side of
+\eqref{eq:profile-ode} is \emph{negative}, so $\phi$ decreases, yet it must
+rise from $u_\ell$ to $u_r$: no profile exists. If $u_\ell>u_r$ the right side
+is negative on $(u_r,u_\ell)$, consistent with a decrease from $u_\ell$ to
+$u_r$, and \eqref{eq:profile-ode} is solved by \eqref{eq:viscous-profile}.
+For the $L^1$ distance, by oddness,
+\begin{equation*}
+  \int_{\mathbb{R}}\tfrac\Delta2\Big|\tanh\tfrac{\Delta\xi}{4\nu}-\operatorname{sgn}\xi\Big|\,d\xi
+  =\Delta\int_0^\infty\Big(1-\tanh\tfrac{\Delta\xi}{4\nu}\Big)d\xi
+  =\Delta\cdot\frac{4\nu}{\Delta}\ln2=4\ln2\,\nu,
+\end{equation*}
+using $\int_0^\infty(1-\tanh s)\,ds=\ln2$.
+\end{proof}
+
+\begin{remark}
+(i) \emph{The Lax condition from viscosity.} A jump with $u_\ell<u_r$ is not
+the limit of viscous travelling waves, whereas every jump with $u_\ell>u_r$ is,
+with thickness $\sim\nu/\Delta\to0$. This derives the admissibility condition
+\eqref{eq:lax-burgers} from the vanishing-viscosity principle directly, and
+explains why $u_A$ of Section~\ref{sec:nonuniqueness} is rejected: it contains
+an upward jump, which no vanishing-viscosity limit can produce.
+(ii) \emph{Galilean invariance.} Equation \eqref{eq:viscous-burgers} is
+invariant under $u\mapsto u+c$, $x\mapsto x+ct$, which maps a profile of
+speed $s$ to one of speed $s-c$ and leaves $L^1$ distances between $u$-values
+unchanged. This is why the constant $4\ln2\,\nu$ does not depend on the speed
+$s$: for the stationary shock of strength $a$ ($s=0$, $\Delta=2a$) it is the
+profile $-a\tanh(ax/2\nu)$ used in Section~\ref{subsec:arctan-complete}, and
+for the shock $1\to0$ of Section~\ref{subsubsec:numerical-viscosity}
+($s=\tfrac12$, $\Delta=1$) it is the same profile boosted by $\tfrac12$.
+\end{remark}

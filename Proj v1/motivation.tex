@@ -1,0 +1,88 @@
+\section{Motivation}
+\label{sec:motivation}
+
+\subsection{Origin in fluid dynamics}
+\label{subsec:fluid-origin}
+
+Burgers' equation was introduced by J. M. Burgers as a simplified model
+for turbulence \cite{burgers1948}, isolating the two competing effects
+that make the Navier--Stokes equations hard to analyse: nonlinear
+advection, which steepens a velocity profile, and viscous diffusion,
+which smooths it. The one-dimensional Navier--Stokes momentum equation is
+\begin{equation}
+  \label{eq:1d-navier-stokes}
+  u_t + u\,u_x = -\frac{1}{\rho} p_x + \nu\, u_{xx},
+\end{equation}
+where $u(x,t)$ is velocity, $\rho$ density, $p$ pressure, and $\nu > 0$
+viscosity. In more than one dimension, $p$ is determined implicitly by
+the incompressibility constraint $\nabla \cdot u = 0$; this nonlocal
+coupling is what makes Navier--Stokes hard to control. In one dimension,
+$u_x = 0$ would force $u$ constant, so the constraint is dropped along
+with the pressure term entirely, leaving
+\begin{equation}
+  \label{eq:viscous-burgers}
+  u_t + u\, u_x = \nu\, u_{xx},
+\end{equation}
+the \emph{viscous Burgers' equation}. Setting $\nu = 0$ gives the
+\emph{inviscid} equation
+\begin{equation}
+  \label{eq:inviscid-burgers}
+  u_t + u\, u_x = 0,
+\end{equation}
+which is the main object of study in Sections
+\ref{sec:characteristics}--\ref{sec:riemann-problem}, before viscosity is
+reintroduced in Section~\ref{sec:extensions}. What remains after this
+simplification is a single scalar equation depending only on local values
+of $u$, but one that retains the nonlinear term $u\,u_x$ responsible for
+the spontaneous formation of discontinuities studied from
+Section~\ref{sec:shock-formation} onward.
+
+\begin{remark}[Vorticity-free flow]
+\label{rem:vorticity-free}
+Without the constraint $\nabla \cdot u = 0$, the flow may be taken
+irrotational, so $u = \varphi_x$ for a scalar potential $\varphi$. This is
+what allows the Cole--Hopf transformation (Section~\ref{sec:extensions})
+to linearise \eqref{eq:viscous-burgers} into the heat equation.
+\end{remark}
+
+\subsection{Burgers' equation as a scalar conservation law}
+\label{subsec:conservation-law-framework}
+
+Equations \eqref{eq:inviscid-burgers} and \eqref{eq:viscous-burgers} are
+instances of a \emph{scalar conservation law},
+\begin{equation}
+  \label{eq:general-conservation-law}
+  u_t + f(u)_x = 0,
+\end{equation}
+with flux $f$, together with its viscous regularisation $u_t + f(u)_x =
+\nu\, u_{xx}$. For Burgers' equation,
+\begin{equation}
+  \label{eq:burgers-flux}
+  f(u) = \frac{u^2}{2},
+\end{equation}
+so $f(u)_x = u\,u_x$ recovers \eqref{eq:inviscid-burgers}. Such equations
+describe a locally conserved quantity transported at state-dependent
+speed $f'(u)$, and arise throughout gas dynamics and multiphase flow.
+Burgers' equation is the simplest nontrivial case (a linear $f$
+gives only the trivial transport equation $u_t + c\,u_x=0$), and is the
+standard first example for the general theory of characteristics, shocks,
+weak solutions, and entropy conditions developed in
+Sections~\ref{sec:characteristics}--\ref{sec:entropy-condition}.
+
+\subsection{Why study Burgers' equation}
+\label{subsec:significance}
+
+Three features make Burgers' equation worth studying in its own right.
+First, it is the simplest equation whose smooth solutions can lose
+smoothness in finite time despite smooth data and no forcing; because it
+is scalar and one-dimensional, this can be analysed completely, unlike
+the analogous (and in three dimensions still open) questions for Euler
+and Navier--Stokes. Second, once weak solutions are admitted, it exhibits
+genuine non-uniqueness (Section~\ref{sec:nonuniqueness}), requiring an
+entropy condition (Section~\ref{sec:entropy-condition}) to restore
+well-posedness --- a phenomenon common to conservation laws in general,
+studied here with minimal technical overhead. Third, the viscous equation
+\eqref{eq:viscous-burgers} is one of the few nonlinear PDEs solvable in
+closed form, via the Cole--Hopf transformation
+(Section~\ref{sec:extensions}), allowing a direct, rigorous comparison
+between the viscous and inviscid theories.
